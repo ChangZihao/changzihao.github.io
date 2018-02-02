@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    <title>粒子群算法(PSO) Python 实现 | Chang Zihao</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="PSO,粒子群">
+    <meta name="description" content="一、简介： 粒子群优化算法是一种基于种群寻优的启发式搜索算 法。在1995年由Kennedy 和Eberhart 首先提出来的。 它的主要启发来源于对鸟群群体运动行为的研究。我 们经常可以观察到鸟群表现出来的同步性，虽然每只 鸟的运动行为都是互相独立的，但是在整个鸟群的飞 行过程中却表现出了高度一致性的复杂行为，并且可 以自适应的调整飞行的状态和轨迹。 鸟群具有这样的复杂飞行行为的原因，可能是因为">
+<meta name="keywords" content="PSO,粒子群">
+<meta property="og:type" content="article">
+<meta property="og:title" content="粒子群算法(PSO) Python 实现">
+<meta property="og:url" content="http://changzihao.me/2018/02/02/粒子群算法-PSO-Python-实现/index.html">
+<meta property="og:site_name" content="Chang Zihao">
+<meta property="og:description" content="一、简介： 粒子群优化算法是一种基于种群寻优的启发式搜索算 法。在1995年由Kennedy 和Eberhart 首先提出来的。 它的主要启发来源于对鸟群群体运动行为的研究。我 们经常可以观察到鸟群表现出来的同步性，虽然每只 鸟的运动行为都是互相独立的，但是在整个鸟群的飞 行过程中却表现出了高度一致性的复杂行为，并且可 以自适应的调整飞行的状态和轨迹。 鸟群具有这样的复杂飞行行为的原因，可能是因为">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-02-02T12:13:46.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="粒子群算法(PSO) Python 实现">
+<meta name="twitter:description" content="一、简介： 粒子群优化算法是一种基于种群寻优的启发式搜索算 法。在1995年由Kennedy 和Eberhart 首先提出来的。 它的主要启发来源于对鸟群群体运动行为的研究。我 们经常可以观察到鸟群表现出来的同步性，虽然每只 鸟的运动行为都是互相独立的，但是在整个鸟群的飞 行过程中却表现出了高度一致性的复杂行为，并且可 以自适应的调整飞行的状态和轨迹。 鸟群具有这样的复杂飞行行为的原因，可能是因为">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+	<link rel="stylesheet" href="/css/style.css?v=1.7.2">
+	<script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+	  <div style="text-align:center">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+			<img src="/img/avatar.jpg">
+        </a>
+	  </div>
+        <hgroup class="introduce">
+          <h5 style="text-align:center" class="nickname">Chang Zihao</h5>
+          <a href="mailto:changzihao17@mails.ucas.edu.cn" title="changzihao17@mails.ucas.edu.cn" class="mail">changzihao17@mails.ucas.edu.cn</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                Home
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                Archives
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                Tags
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/changzihao" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://weibo.com/u/1954058494?refer_flag=1001030201_&is_all=1" target="_blank" >
+                <i class="icon icon-lg icon-weibo"></i>
+                Weibo
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">粒子群算法(PSO) Python 实现</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 style="text-align:left" class="title">粒子群算法(PSO) Python 实现</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2018-02-02T10:28:00.000Z" itemprop="datePublished" class="page-time">
+  2018-02-02
+</time>
+
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#一、简介："><span class="post-toc-number">1.</span> <span class="post-toc-text">一、简介：</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#二、原理"><span class="post-toc-number">2.</span> <span class="post-toc-text">二、原理</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#三、构成要素"><span class="post-toc-number">3.</span> <span class="post-toc-text">三、构成要素</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#四、算法过程描述"><span class="post-toc-number">4.</span> <span class="post-toc-text">四、算法过程描述</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#五、总结"><span class="post-toc-number">5.</span> <span class="post-toc-text">五、总结</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#六、实现"><span class="post-toc-number">6.</span> <span class="post-toc-text">六、实现</span></a></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-粒子群算法-PSO-Python-实现"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">粒子群算法(PSO) Python 实现</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2018-02-02 18:28:00" datetime="2018-02-02T10:28:00.000Z"  itemprop="datePublished">2018-02-02</time>
+
+            
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <h2 id="一、简介："><a href="#一、简介：" class="headerlink" title="一、简介："></a>一、简介：</h2><ul>
+<li>粒子群优化算法是一种基于种群寻优的启发式搜索算 法。在1995年由Kennedy 和Eberhart 首先提出来的。</li>
+<li>它的主要启发来源于对鸟群群体运动行为的研究。我 们经常可以观察到鸟群表现出来的同步性，虽然每只 鸟的运动行为都是互相独立的，但是在整个鸟群的飞 行过程中却表现出了高度一致性的复杂行为，并且可 以自适应的调整飞行的状态和轨迹。</li>
+<li>鸟群具有这样的复杂飞行行为的原因，可能是因为每 只鸟在飞行过程中都遵循了一定的行为规则，并能够 掌握邻域内其它鸟的飞行信息。</li>
+</ul>
+<h2 id="二、原理"><a href="#二、原理" class="headerlink" title="二、原理"></a>二、原理</h2><ul>
+<li>粒子群优化算法借鉴了这样的思想，每个粒子代表待 求解问题搜索解空间中的一个潜在解，它相当于一只鸟，“飞行信息”包括粒子当前的位置和速度两个状态量。</li>
+<li>每个粒子都可以获得其邻域内其它个体的信息，对所 经过的位置进行评价，并根据这些信息和位置速度更 新规则，改变自身的两个状态量，在“飞行”过程中 传递信息和互相学习，去更好地适应环境。</li>
+<li>随着这一过程的不断进行，粒子群最终能够找到问题 的近似最优解。</li>
+</ul>
+<h2 id="三、构成要素"><a href="#三、构成要素" class="headerlink" title="三、构成要素"></a>三、构成要素</h2><p>1 . 粒子群</p>
+<ul>
+<li>每个粒子对应所求解问题的一个可行解</li>
+<li>粒子通过其位置和速度表示<ul>
+<li>粒子i在第n轮的位置: $x_n^{(i)}$</li>
+<li>粒子i在第n轮的速度: $v_n^{(i)}$</li>
+</ul>
+</li>
+</ul>
+<p>2 . 记录</p>
+<ul>
+<li>$p_{best}^{(i)}$ :粒子𝑖的历史最好位置 </li>
+<li>$g_{best}$:全局历史最好位置</li>
+</ul>
+<p>3 . 计算适应度的函数 </p>
+<ul>
+<li>适应度:$𝑓(𝑥)$</li>
+</ul>
+<h2 id="四、算法过程描述"><a href="#四、算法过程描述" class="headerlink" title="四、算法过程描述"></a>四、算法过程描述</h2><p>1 . 初始化 </p>
+<ul>
+<li>初始化粒子群:每个粒子的位置和速度，即 $x_0^{(i)}$ 和 $v_0^{(i)}$ </li>
+<li>初始化$p_{best}^{(i)}$和$g_{best}$</li>
+</ul>
+<p>2 . 循环执行如下三步直至满足结束条件</p>
+<ul>
+<li>计算每个粒子的适应度: $f(x_n^{(i)})$</li>
+<li>更新每个粒子历史最好适应度及其相应的位置，更新当前全局最好适 应度及其相应的位置</li>
+<li>更新每个粒子的速度和位置</li>
+</ul>
+<script type="math/tex; mode=display">v_{n+1}^{(i)}=w*v_{n}^{(i)}+c_1*r_1*(p_{best}^{(i)}-x_{n}^{(i)})+c_2*r_2*(g_{best}-x_{n}^{(i)})</script><script type="math/tex; mode=display">x_{n+1}^{(i)}=x_n^{(i)}+v_{n+1}^{(i)}</script><blockquote>
+<p>上面公式中：<br>i表示粒子编号；n表示时刻，反映在迭代次数上；w是惯性权重，一般设置在0.4&gt;左右；c表示学习因子，一般都取值为2；Xpbest表示的是粒子i的经验，也即是粒子i所到过最佳位置；Xgbest代表的是全局最优粒子的位置；r是0到1之间的随机值。</p>
+</blockquote>
+<p>3 . 算法终止条件 </p>
+<ul>
+<li>迭代的轮数</li>
+<li>最佳位置连续未更新的轮数</li>
+<li>适应度函数的值到达预期要求</li>
+</ul>
+<h2 id="五、总结"><a href="#五、总结" class="headerlink" title="五、总结"></a>五、总结</h2><p>1 . 和遗传算法相比</p>
+<ul>
+<li>遗传算法强调“适者生存”，不好的个体在竞争中被淘汰; PSO强调“协同合作”，不好的个体通过学习向好 的方向转变。</li>
+<li>遗传算法中最好的个体通过产生更多的后代来传播基因; PSO中的最好个体通过吸引其它个体向它靠近来施加影响。</li>
+<li>遗传算法的选择概率只与上一代群体相关，而与历史无关，群体的信息变化过程是一个Markov链过程; 而PSO中的个体除了有位置和速度外，还有着过去的历史信息 ($p_{Best}$、$g_{Best}$)。</li>
+</ul>
+<p>2 . 优点</p>
+<ul>
+<li>易于实现;</li>
+<li>可调参数较少;</li>
+<li>所需种群或微粒群规模较小;  计算效率高，收敛速度快。</li>
+</ul>
+<p>3 . 缺点</p>
+<ul>
+<li>和其它演化计算算法类似，不保证收敛到全局最优解</li>
+</ul>
+<p>4 . 一种随机优化算法，适用于求解连续解空间的优化问题</p>
+<h2 id="六、实现"><a href="#六、实现" class="headerlink" title="六、实现"></a>六、实现</h2><p>用python实现粒子群算法，求解函数 $f(x)=x^3-5x^2-2x+3$ 在取值范围[-2,5]之间的最小值和最大值</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#𝑓(𝑥) =𝑥3−5𝑥2−2𝑥+3</span></span><br><span class="line"><span class="comment">#x = [2~5]</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> random</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Bird</span><span class="params">(object)</span>:</span></span><br><span class="line">    <span class="string">"""</span></span><br><span class="line"><span class="string">    speed:速度</span></span><br><span class="line"><span class="string">    position:位置</span></span><br><span class="line"><span class="string">    fit:适应度</span></span><br><span class="line"><span class="string">    lbestposition:经历的最佳位置</span></span><br><span class="line"><span class="string">    lbestfit:经历的最佳的适应度值</span></span><br><span class="line"><span class="string">    """</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, speed, position, fit, lBestPosition, lBestFit)</span>:</span></span><br><span class="line">        self.speed = speed</span><br><span class="line">        self.position = position</span><br><span class="line">        self.fit = fit</span><br><span class="line">        self.lBestFit = lBestFit</span><br><span class="line">        self.lBestPosition = lBestPosition</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">PSO</span><span class="params">(object)</span>:</span></span><br><span class="line">    <span class="string">"""</span></span><br><span class="line"><span class="string">    fitFunc:适应度函数</span></span><br><span class="line"><span class="string">    birdNum:种群规模</span></span><br><span class="line"><span class="string">    w:惯性权重</span></span><br><span class="line"><span class="string">    c1,c2:个体学习因子，社会学习因子</span></span><br><span class="line"><span class="string">    solutionSpace:解空间，列表类型：[最小值，最大值]\</span></span><br><span class="line"><span class="string">    positonSpace:更新后解空间的范围，列表类型：[最小值，最大值]</span></span><br><span class="line"><span class="string">    stabel:解的稳定次数</span></span><br><span class="line"><span class="string">    max_stable:最佳位置连续未更新的轮数</span></span><br><span class="line"><span class="string">    """</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, fitFunc, birdNum, w, c1, c2, solutionSpace, max_stable)</span>:</span></span><br><span class="line">        self.fitFunc = fitFunc</span><br><span class="line">        self.w = w</span><br><span class="line">        self.c1 = c1</span><br><span class="line">        self.c2 = c2</span><br><span class="line">        self.birds, self.best = self.initbirds(birdNum, solutionSpace)</span><br><span class="line">        self.positonSpace = [solutionSpace[<span class="number">0</span>] - c1 *(solutionSpace[<span class="number">1</span>] - solutionSpace[<span class="number">0</span>]),</span><br><span class="line">                             solutionSpace[<span class="number">1</span>] + c2 *(solutionSpace[<span class="number">1</span>] - solutionSpace[<span class="number">0</span>])]</span><br><span class="line">        self.stable = <span class="number">0</span></span><br><span class="line">        self.max_stable =max_stable</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">initbirds</span><span class="params">(self, size, solutionSpace)</span>:</span></span><br><span class="line">        birds = []</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(size):</span><br><span class="line">            position = random.uniform(solutionSpace[<span class="number">0</span>], solutionSpace[<span class="number">1</span>])</span><br><span class="line">            speed = <span class="number">0</span></span><br><span class="line">            fit = self.fitFunc(position)</span><br><span class="line">            <span class="comment"># (self, speed, position, fit, lBestPosition, lBestFit)</span></span><br><span class="line">            birds.append(Bird(speed, position, fit, position, fit))</span><br><span class="line">        best = birds[<span class="number">0</span>]</span><br><span class="line">        <span class="keyword">for</span> bird <span class="keyword">in</span> birds :</span><br><span class="line">            <span class="keyword">if</span> bird.fit &gt; best.fit :</span><br><span class="line">                best = bird</span><br><span class="line">        <span class="keyword">return</span> birds, best</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">updateBirds</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">for</span> bird <span class="keyword">in</span> self.birds:</span><br><span class="line">            <span class="comment"># 更新速度</span></span><br><span class="line">            bird.speed = self.w * bird.speed \</span><br><span class="line">                         + self.c1 * random.random() * (bird.lBestPosition - bird.position) \</span><br><span class="line">                         + self.c2 * random.random() * (self.best.position - bird.position)</span><br><span class="line">            <span class="comment"># 更新位置</span></span><br><span class="line">            bird.position = bird.position + bird.speed</span><br><span class="line">            <span class="comment"># 相对于solutionSpace进行归一化</span></span><br><span class="line">            bird.position = self.normalization(bird.position)</span><br><span class="line">            <span class="comment"># 跟新适应度</span></span><br><span class="line">            bird.fit = self.fitFunc(bird.position)</span><br><span class="line">            <span class="comment"># 查看是否需要更新经验最优</span></span><br><span class="line">            <span class="keyword">if</span> bird.fit &gt; bird.lBestFit:</span><br><span class="line">                bird.lBestFit = bird.fit</span><br><span class="line">                bird.lBestPosition = bird.position</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">solve</span><span class="params">(self, maxIter)</span>:</span></span><br><span class="line">        <span class="comment"># 只考虑了最大迭代次数，如需考虑阈值，添加判断语句就好</span></span><br><span class="line">        is_updated = <span class="number">0</span></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(maxIter):</span><br><span class="line">            <span class="comment"># 更新粒子</span></span><br><span class="line">            self.updateBirds()</span><br><span class="line">            <span class="keyword">for</span> bird <span class="keyword">in</span> self.birds:</span><br><span class="line">                <span class="comment"># 查看是否需要更新全局最优</span></span><br><span class="line">                <span class="keyword">if</span> bird.fit &gt; self.best.fit:</span><br><span class="line">                    self.best = bird</span><br><span class="line">                    is_updated = <span class="number">1</span></span><br><span class="line">        <span class="keyword">if</span> is_updated :</span><br><span class="line">            self.stable = <span class="number">0</span></span><br><span class="line">        <span class="keyword">else</span> :</span><br><span class="line">            self.stable +=<span class="number">1</span></span><br><span class="line">        <span class="keyword">if</span> self.stable &gt;= self.max_stable:</span><br><span class="line">            <span class="keyword">return</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">normalization</span><span class="params">(self, position)</span>:</span></span><br><span class="line">        postion =(position - self.positonSpace[<span class="number">0</span>]) \</span><br><span class="line">                / (self.positonSpace[<span class="number">1</span>] - self.positonSpace[<span class="number">0</span>])</span><br><span class="line">        postion = postion * (solutionSpace[<span class="number">1</span>] - solutionSpace[<span class="number">0</span>])</span><br><span class="line">        postion = postion + solutionSpace[<span class="number">0</span>]</span><br><span class="line">        <span class="keyword">return</span> postion</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">fx_max_fit</span><span class="params">(p)</span>:</span></span><br><span class="line">    <span class="keyword">return</span> p ** <span class="number">3</span> - <span class="number">5</span> * p * p - <span class="number">2</span> * p + <span class="number">3</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">fx_min_fit</span><span class="params">(p)</span>:</span></span><br><span class="line">    <span class="keyword">return</span> -(p ** <span class="number">3</span> - <span class="number">5</span> * p * p - <span class="number">2</span> * p + <span class="number">3</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    solutionSpace = [<span class="number">-2</span>, <span class="number">5</span>]</span><br><span class="line">    <span class="comment">#w: 惯性权重</span></span><br><span class="line">    w = <span class="number">1</span></span><br><span class="line">    <span class="comment">#c1, c2: 个体学习因子，社会学习因子</span></span><br><span class="line">    c1 = <span class="number">2</span></span><br><span class="line">    c2 = <span class="number">2</span></span><br><span class="line">    <span class="comment">#birdNum:种群规模</span></span><br><span class="line">    birdNum = <span class="number">5</span></span><br><span class="line">    <span class="comment">#maxIter 最大迭代次数</span></span><br><span class="line">    maxIter = <span class="number">10000</span></span><br><span class="line">    <span class="comment"># max_stable:最佳位置连续未更新的轮数</span></span><br><span class="line">    max_stable = <span class="number">5</span></span><br><span class="line"></span><br><span class="line">    max = PSO(fx_max_fit, birdNum, w, c1, c2, solutionSpace, <span class="number">5</span>)</span><br><span class="line">    min = PSO(fx_min_fit, birdNum, w, c1, c2, solutionSpace, <span class="number">5</span>)</span><br><span class="line"></span><br><span class="line">    max.solve(maxIter)</span><br><span class="line">    min.solve(maxIter)</span><br><span class="line"></span><br><span class="line">    print(max.best.lBestPosition)</span><br><span class="line">    print(min.best.lBestPosition)</span><br></pre></td></tr></table></figure>
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2018-02-02T12:13:46.000Z" itemprop="dateUpdated">2018-02-02 20:13:46</time>
+</span><br>
+
+
+        
+        这里可以写作者留言，标签和 hexo 中所有变量及辅助函数等均可调用，示例：<a href="/2018/02/02/粒子群算法-PSO-Python-实现/" target="_blank" rel="external">http://changzihao.me/2018/02/02/粒子群算法-PSO-Python-实现/</a>
+        
+    </div>
+    
+    <footer>
+        <a href="http://changzihao.me">
+            <img src="/img/avatar.jpg" alt="Chang Zihao">
+            Chang Zihao
+        </a>
+    </footer>
+</blockquote>
+
+        
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/PSO/">PSO</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/粒子群/">粒子群</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://changzihao.me/2018/02/02/粒子群算法-PSO-Python-实现/&title=《粒子群算法(PSO) Python 实现》 — Chang Zihao&pic=http://changzihao.me/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://changzihao.me/2018/02/02/粒子群算法-PSO-Python-实现/&title=《粒子群算法(PSO) Python 实现》 — Chang Zihao&source=" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://changzihao.me/2018/02/02/粒子群算法-PSO-Python-实现/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《粒子群算法(PSO) Python 实现》 — Chang Zihao&url=http://changzihao.me/2018/02/02/粒子群算法-PSO-Python-实现/&via=http://changzihao.me" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://changzihao.me/2018/02/02/粒子群算法-PSO-Python-实现/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/2018/02/02/qemu-run-riscv/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">qemu运行riscv linux</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2017/11/16/hello-world/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">Hello World</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+<section class="comments" id="comments">
+    <div id="gitment_thread"></div>
+    <link rel="stylesheet" href="//unpkg.com/gitment/style/default.css">
+    <script src="//unpkg.com/gitment/dist/gitment.browser.js"></script>
+    <script>
+        var gitment = new Gitment({
+            owner: 'ChangZihao',
+            repo: 'Blog-comment',
+            oauth: {
+                client_id: '38962dd81493c63dc7ac',
+                client_secret: '39abb3abdab52809d3324ac4e2bc17afc20311cb',
+            },
+        })
+        gitment.render('comments')
+    </script>
+</section>
+
+
+
+
+
+
+
+</article>
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        谢谢大爷~
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/wechat.jpg" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check"
+                data-wechat="/img/wechat.jpg" data-alipay="/img/alipay.jpg">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>Chang Zihao &copy; 2015 - 2018</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://changzihao.me/2018/02/02/粒子群算法-PSO-Python-实现/&title=《粒子群算法(PSO) Python 实现》 — Chang Zihao&pic=http://changzihao.me/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://changzihao.me/2018/02/02/粒子群算法-PSO-Python-实现/&title=《粒子群算法(PSO) Python 实现》 — Chang Zihao&source=" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://changzihao.me/2018/02/02/粒子群算法-PSO-Python-实现/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《粒子群算法(PSO) Python 实现》 — Chang Zihao&url=http://changzihao.me/2018/02/02/粒子群算法-PSO-Python-实现/&via=http://changzihao.me" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://changzihao.me/2018/02/02/粒子群算法-PSO-Python-实现/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=http://changzihao.me/2018/02/02/粒子群算法-PSO-Python-实现/" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
+
+
+</script>
+
+<script src="/js/main.min.js?v=1.7.2"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="/js/search.min.js?v=1.7.2" async></script>
+
+
+
+
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = '页面崩溃了，快回来！';
+            clearTimeout(titleTime);
+        } else {
+            document.title = '(つェ⊂)咦!又好了!';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
+</script>
+
+
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</body>
+</html>

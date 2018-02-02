@@ -151,7 +151,7 @@
   class="article-card article-type-post" itemprop="blogPost">
 
     <div class="post-meta">
-        <time class="post-time" title="2018-01-29 15:48:18" datetime="2018-01-29T07:48:18.000Z"  itemprop="datePublished">2018-01-29</time>
+        <time class="post-time" title="2018-02-02 20:12:35" datetime="2018-02-02T12:12:35.000Z"  itemprop="datePublished">2018-02-02</time>
 
         
 	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/riscv/">riscv</a></li></ul>
@@ -165,7 +165,7 @@
 
   
     <h3 class="post-title" itemprop="name">
-      <a class="post-title-link" href="/2018/01/29/qemu-run-riscv/">qemu运行riscv linux</a>
+      <a class="post-title-link" href="/2018/02/02/qemu-run-riscv/">qemu运行riscv linux</a>
     </h3>
   
 
@@ -175,16 +175,18 @@
     <div class="post-content" id="post-content" itemprop="postContent">
 
     
-        qemu运行riscv linux过程：在物理服务器上安装qemu模拟器，模拟器中运行基于riscv指令集编译的linux镜像文件。
+        过程：在物理服务器上安装qemu模拟器，模拟器中运行基于riscv指令集编译的linux镜像文件。
 工具集合：
 
 riscv-qemu（模拟器，可以模拟运行riscv指令集的程序或镜像）
 riscv-tools（基于riscv指令集的交叉编译工具）
 riscv-pk（用于包装内核文件vmlinux）
-busybox(用于给linux镜像安装基本命令，如ls，...
+busybox(用于给linux镜像安装基本命令，如ls，cat，mv等等)
+
+一、从零开始...
     
 
-        <a href="/2018/01/29/qemu-run-riscv/" class="post-more waves-effect waves-button">
+        <a href="/2018/02/02/qemu-run-riscv/" class="post-more waves-effect waves-button">
             阅读全文…
         </a>
     </div>
@@ -192,6 +194,54 @@ busybox(用于给linux镜像安装基本命令，如ls，...
     <div class="post-footer">
         
 	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/qemu/">qemu</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/riscv/">riscv</a></li></ul>
+
+    </div>
+    
+</article>
+
+        </li>
+    
+        <li class="post-list-item fade">
+            <article id="post-粒子群算法-PSO-Python-实现"
+  class="article-card article-type-post" itemprop="blogPost">
+
+    <div class="post-meta">
+        <time class="post-time" title="2018-02-02 18:28:00" datetime="2018-02-02T10:28:00.000Z"  itemprop="datePublished">2018-02-02</time>
+
+        
+
+
+    </div>
+
+    
+
+
+  
+    <h3 class="post-title" itemprop="name">
+      <a class="post-title-link" href="/2018/02/02/粒子群算法-PSO-Python-实现/">粒子群算法(PSO) Python 实现</a>
+    </h3>
+  
+
+
+
+
+    <div class="post-content" id="post-content" itemprop="postContent">
+
+    
+        一、简介：
+粒子群优化算法是一种基于种群寻优的启发式搜索算 法。在1995年由Kennedy 和Eberhart 首先提出来的。
+它的主要启发来源于对鸟群群体运动行为的研究。我 们经常可以观察到鸟群表现出来的同步性，虽然每只 鸟的运动行为都是互相独立的，但是在整个鸟群的飞 行过程中却表现出了高度一致性的复杂行为，并且可 以自适应的调整飞行的状态和轨迹。
+鸟群具有这样的复杂飞行行为的原因，可能...
+    
+
+        <a href="/2018/02/02/粒子群算法-PSO-Python-实现/" class="post-more waves-effect waves-button">
+            阅读全文…
+        </a>
+    </div>
+    
+    <div class="post-footer">
+        
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/PSO/">PSO</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/粒子群/">粒子群</a></li></ul>
 
     </div>
     
@@ -389,5 +439,20 @@ var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
 
 
 
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 </body>
 </html>

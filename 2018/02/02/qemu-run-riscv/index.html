@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    <title>qemu运行riscv linux | Chang Zihao</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="riscv,qemu">
+    <meta name="description" content="过程：在物理服务器上安装qemu模拟器，模拟器中运行基于riscv指令集编译的linux镜像文件。 工具集合：  riscv-qemu（模拟器，可以模拟运行riscv指令集的程序或镜像） riscv-tools（基于riscv指令集的交叉编译工具） riscv-pk（用于包装内核文件vmlinux） busybox(用于给linux镜像安装基本命令，如ls，cat，mv等等)  一、从零开始首先创">
+<meta name="keywords" content="riscv,qemu">
+<meta property="og:type" content="article">
+<meta property="og:title" content="qemu运行riscv linux">
+<meta property="og:url" content="http://changzihao.me/2018/02/02/qemu-run-riscv/index.html">
+<meta property="og:site_name" content="Chang Zihao">
+<meta property="og:description" content="过程：在物理服务器上安装qemu模拟器，模拟器中运行基于riscv指令集编译的linux镜像文件。 工具集合：  riscv-qemu（模拟器，可以模拟运行riscv指令集的程序或镜像） riscv-tools（基于riscv指令集的交叉编译工具） riscv-pk（用于包装内核文件vmlinux） busybox(用于给linux镜像安装基本命令，如ls，cat，mv等等)  一、从零开始首先创">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://changzihao.me/img/sifive.png">
+<meta property="og:updated_time" content="2018-02-02T12:12:35.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="qemu运行riscv linux">
+<meta name="twitter:description" content="过程：在物理服务器上安装qemu模拟器，模拟器中运行基于riscv指令集编译的linux镜像文件。 工具集合：  riscv-qemu（模拟器，可以模拟运行riscv指令集的程序或镜像） riscv-tools（基于riscv指令集的交叉编译工具） riscv-pk（用于包装内核文件vmlinux） busybox(用于给linux镜像安装基本命令，如ls，cat，mv等等)  一、从零开始首先创">
+<meta name="twitter:image" content="http://changzihao.me/img/sifive.png">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+	<link rel="stylesheet" href="/css/style.css?v=1.7.2">
+	<script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+	  <div style="text-align:center">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+			<img src="/img/avatar.jpg">
+        </a>
+	  </div>
+        <hgroup class="introduce">
+          <h5 style="text-align:center" class="nickname">Chang Zihao</h5>
+          <a href="mailto:changzihao17@mails.ucas.edu.cn" title="changzihao17@mails.ucas.edu.cn" class="mail">changzihao17@mails.ucas.edu.cn</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                Home
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                Archives
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                Tags
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/changzihao" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://weibo.com/u/1954058494?refer_flag=1001030201_&is_all=1" target="_blank" >
+                <i class="icon icon-lg icon-weibo"></i>
+                Weibo
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">qemu运行riscv linux</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 style="text-align:left" class="title">qemu运行riscv linux</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2018-02-02T12:12:35.000Z" itemprop="datePublished" class="page-time">
+  2018-02-02
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/riscv/">riscv</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#一、从零开始"><span class="post-toc-number">1.</span> <span class="post-toc-text">一、从零开始</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#二、安装riscv-toolchain"><span class="post-toc-number">2.</span> <span class="post-toc-text">二、安装riscv-toolchain</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#三、安装riscv-qemu"><span class="post-toc-number">3.</span> <span class="post-toc-text">三、安装riscv-qemu</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#四、编译busybox"><span class="post-toc-number">4.</span> <span class="post-toc-text">四、编译busybox</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#五、编译riscv-linux"><span class="post-toc-number">5.</span> <span class="post-toc-text">五、编译riscv-linux</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#六、启动qemu运行linux镜像"><span class="post-toc-number">6.</span> <span class="post-toc-text">六、启动qemu运行linux镜像</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#七、最后"><span class="post-toc-number">7.</span> <span class="post-toc-text">七、最后</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#八、最后的最后"><span class="post-toc-number">8.</span> <span class="post-toc-text">八、最后的最后</span></a></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-qemu-run-riscv"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">qemu运行riscv linux</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2018-02-02 20:12:35" datetime="2018-02-02T12:12:35.000Z"  itemprop="datePublished">2018-02-02</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/riscv/">riscv</a></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <p>过程：<br>在物理服务器上安装qemu模拟器，模拟器中运行基于riscv指令集编译的linux镜像文件。</p>
+<p>工具集合：</p>
+<ul>
+<li>riscv-qemu（模拟器，可以模拟运行riscv指令集的程序或镜像）</li>
+<li>riscv-tools（基于riscv指令集的交叉编译工具）</li>
+<li>riscv-pk（用于包装内核文件vmlinux）</li>
+<li>busybox(用于给linux镜像安装基本命令，如ls，cat，mv等等)</li>
+</ul>
+<h2 id="一、从零开始"><a href="#一、从零开始" class="headerlink" title="一、从零开始"></a>一、从零开始</h2><p>首先创建一个工作目录叫做<code>$TOP</code>,进入工作目录，并将设定<code>$TOP</code>环境变量  </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ mkdir riscv</span><br><span class="line">$ <span class="built_in">cd</span> riscv</span><br><span class="line">$ $ <span class="built_in">export</span> TOP=$(<span class="built_in">pwd</span>)</span><br></pre></td></tr></table></figure>
+<h2 id="二、安装riscv-toolchain"><a href="#二、安装riscv-toolchain" class="headerlink" title="二、安装riscv-toolchain"></a>二、安装riscv-toolchain</h2><p>1 . 下载交叉编译工具:  </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ git <span class="built_in">clone</span> https://github.com/riscv/riscv-tools.git</span><br><span class="line">$ <span class="built_in">cd</span> <span class="variable">$TOP</span>/riscv-tools</span><br><span class="line">$ git submodule update --init --recursive</span><br></pre></td></tr></table></figure>
+<p>2 . 为了编译gcc，我们需要安装一些其他的依赖库，包括 flex, bison, autotools, libmpc, libmpfr, and libgmp. Ubuntu系统可以通过如下命令安装： </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get install autoconf automake autotools-dev curl device-tree-compiler libmpc-dev libmpfr-dev libgmp-dev gawk build-essential bison flex texinfo gperf</span><br></pre></td></tr></table></figure>
+<p>3 . 在开始安装之前，需要设置<code>$RISCV</code>,<code>$PATH</code>环境变量，这些环境变量会在整个安装过程中使用: </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">export</span> RISCV=<span class="variable">$TOP</span>/riscv  <span class="comment">#将作为所有工具的安装路径 --prefix=$RISCV</span></span><br><span class="line">$ <span class="built_in">export</span> PATH=<span class="variable">$PATH</span>:<span class="variable">$RISCV</span>/bin</span><br></pre></td></tr></table></figure>
+<p>4 . 安装spike工具:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ ./build-spike-only.sh</span><br></pre></td></tr></table></figure>
+<p>5 . 编译 <code>riscv64-unknown-linux-gnu-gcc</code>:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">cd</span> riscv-gnu-toolchain</span><br><span class="line">$ ./configure --prefix=<span class="variable">$RISCV</span></span><br></pre></td></tr></table></figure>
+<p>这会将<code>riscv64-unknown-linux-gnu-gcc</code>与<code>riscv64-unknown-elf-gcc</code>工具一样安装到<code>$RISCV</code>，同时 <code>$RISCV/bin</code>已经被添加置PATH中，所以上述工具可以直接使用。</p>
+<p>最后执行下面的指令，运行build:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ make linux</span><br></pre></td></tr></table></figure>
+<h2 id="三、安装riscv-qemu"><a href="#三、安装riscv-qemu" class="headerlink" title="三、安装riscv-qemu"></a>三、安装riscv-qemu</h2><p>1、安装qemu:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">cd</span> <span class="variable">$TOP</span></span><br><span class="line">$ git <span class="built_in">clone</span> https://github.com/riscv/riscv-qemu.git</span><br><span class="line">$ <span class="built_in">cd</span> riscv-qemu </span><br><span class="line">$ git submodule update --init pixman </span><br><span class="line">$ mkdir build</span><br><span class="line">$ <span class="built_in">cd</span> build</span><br><span class="line">$ ../configure </span><br><span class="line">$ make</span><br></pre></td></tr></table></figure>
+<p>2、测试qemu的用户模式:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ riscv64-unknown-linux-gnu-gcc hello.c -o hello</span><br><span class="line">$ ./riscv64-linux-user/qemu-riscv64 -L <span class="variable">$RISCV</span>/sysroot hello</span><br></pre></td></tr></table></figure>
+<p>3、测试qemu的镜像模式:<br>启动qemu，载入bbl示例镜像文件，下载地址:<a href="https://people.eecs.berkeley.edu/~skarandikar/host/qemu/1.9.1/bblvmlinuxinitramfs_dynamic" target="_blank" rel="noopener">bblvmlinuxinitramfs_dynamic</a></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ riscv-qemu/riscv64-softmmu/qemu-system-riscv64 -kernel /home/tank/bblvmlinuxinitramfs_dynamic -nographic</span><br></pre></td></tr></table></figure>
+<h2 id="四、编译busybox"><a href="#四、编译busybox" class="headerlink" title="四、编译busybox"></a>四、编译busybox</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$ git <span class="built_in">clone</span> https://github.com/mirror/busybox</span><br><span class="line">$ git checkout 1_28_stable</span><br><span class="line">$ <span class="built_in">cd</span> busybox</span><br><span class="line">$ make allnoconfig</span><br><span class="line">$ make menuconfig  <span class="comment">#按照需求设定编译选项、交叉编译工具</span></span><br><span class="line">$ make ARCH=riscv menuconfig  <span class="comment">#设置交叉编译工具、编译选项、inittab等</span></span><br><span class="line">$ make -j8</span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>CONFIG_STATIC=y</code>, listed as “Build BusyBox as a static binary (no shared libs)” in BusyBox Settings → Build Options</li>
+<li><code>CONFIG_CROSS_COMPILER_PREFIX=riscv64-unknown-linux-gnu-</code>, listed as “Cross Compiler prefix” in BusyBox Settings → Build Options</li>
+<li><code>CONFIG_FEATURE_INSTALLER=y</code>, listed as “Support —install [-s] to install applet links at runtime” in BusyBox Settings → General Configuration</li>
+<li><code>CONFIG_INIT=y</code>, listed as “init” in Init utilities</li>
+<li><code>CONFIG_ASH=y</code>, listed as “ash” in Shells</li>
+<li><code>CONFIG_ASH_JOB_CONTROL=n</code>, listed as “Ash → Job control” in Shells</li>
+<li><code>CONFIG_MOUNT=y</code>, listed as “mount” in Linux System Utilities</li>
+<li><code>CONFIG_FEATURE_USE_INITTAB=y</code>, listed as “Support reading an inittab file” in Init Utilities</li>
+</ul>
+<p>编译完成后会在busybox目录下生成busybox二进制执行文件</p>
+<h2 id="五、编译riscv-linux"><a href="#五、编译riscv-linux" class="headerlink" title="五、编译riscv-linux"></a>五、编译riscv-linux</h2><p>1 . 获取内核代码:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">cd</span> <span class="variable">$TOP</span></span><br><span class="line">$ git <span class="built_in">clone</span> https://github.com/riscv/riscv-linux.git riscv-linux</span><br><span class="line">$ <span class="built_in">cd</span> riscv-linux</span><br></pre></td></tr></table></figure>
+<p>2 . 准备一个文件系统初始化文件，命名为<code>initramfs.txt</code>,可以在其中创建任意想要的文件夹文件，如下是我的文件系统样例： </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">dir /dev 755 0 0</span><br><span class="line">nod /dev/console 644 0 0 c 5 1</span><br><span class="line">nod /dev/null 644 0 0 c 1 3</span><br><span class="line">dir /proc 755 0 0</span><br><span class="line">dir /bin 755 0 0</span><br><span class="line">dir /tmp 755 0 0</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">file /bin/busybox /path/to/your/busybox 755 0 0</span><br><span class="line">slink /init /bin/busybox 755 0 0</span><br><span class="line">dir /sbin 755 0 0</span><br><span class="line">dir /usr 755 0 0</span><br><span class="line">dir /usr/bin 755 0 0</span><br><span class="line">dir /usr/sbin 755 0 0</span><br><span class="line">dir /etc 755 0 0</span><br><span class="line">file /etc/inittab /path/to/your/inittab 644 0 0</span><br><span class="line">dir /lib 755 0 0</span><br></pre></td></tr></table></figure>
+<p>3 . 准备一份初始化表，命名为<code>inittab</code>,放置在内核的<code>/etc</code>目录下，如下是一个简单的<code>inittab</code>样例： </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">::sysinit:/bin/busybox mount -t proc proc /proc</span><br><span class="line">::sysinit:/bin/busybox mount -t tmpfs tmpfs /tmp</span><br><span class="line">::sysinit:/bin/busybox mount -o remount,rw /dev/htifblk0 /</span><br><span class="line">::sysinit:/bin/busybox --install -s</span><br><span class="line">/dev/console::sysinit:-/bin/ash</span><br></pre></td></tr></table></figure>
+<p>4 . 下面正式开始编译内核,首先配置编译选项:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ make mrproper  <span class="comment">#很重要</span></span><br><span class="line">$ make ARCH=riscv defconfig</span><br><span class="line">$ make ARCH=riscv menuconfig  <span class="comment">#设置交叉编译工具、编译选项、initramfs等</span></span><br><span class="line">$ make -j8 ARCH=riscv</span><br></pre></td></tr></table></figure>
+<ul>
+<li>如果不执行make mrproper编译内核时可能出现缺少头文件错误</li>
+<li>menuconfig : “General setup -&gt; Initial RAM Filesystem…” (CONFIG_BLK_DEV_INITRD=y)</li>
+<li>menuconfig : “General setup -&gt; Initramfs source files (CONFIG_INITRAMFS_SRC=/path/to/your/initramfs.txt)</li>
+<li>menuconfig : “General setup -&gt; Cross-compiler tool prefix (CONFIG_CROSS_COMPILER_PREFIX=riscv64-unknown-linux-gnu-)</li>
+</ul>
+<h2 id="六、启动qemu运行linux镜像"><a href="#六、启动qemu运行linux镜像" class="headerlink" title="六、启动qemu运行linux镜像"></a>六、启动qemu运行linux镜像</h2><p>所有准备工作完成，下面开始运行linux镜像<br>1 . 首先需要通过pk工具包中的bbl工具为linux kernel添加boot loader:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">cd</span> &lt;riscv-pk&gt;/build</span><br><span class="line">$ rm -rf *</span><br><span class="line">$ ../configure --prefix=<span class="variable">$RISCV</span> --host=riscv64-unknown-linux-gnu --with-payload=&lt;riscv-linux&gt;/vmlinux</span><br><span class="line">$ make bbl</span><br></pre></td></tr></table></figure>
+<p>2 . 接下来通过qemu运行上一步中生成的bbl文件:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">riscv-qemu/riscv64-softmmu/qemu-system-riscv64 -kernel &lt;riscv-pk&gt;/build/bbl -nographic</span><br></pre></td></tr></table></figure>
+<p>3 . 接下来你的屏幕上会想RV图像，通过你的制作的linux镜像也会通过qemu运行，因为我们已经在其中添加了busybox工具包，你可以执行例如ls、cd、pwd等指令。通过还可以将自己编写的c语言，g语言的程序通过riscv的工具链进行编译，然后按照样例修改<code>initramfs.txt</code>文件，将编译好的二进制文件加入到内核的文件系统中，然后重新从编译内核开始重新执行一遍上述过程，便可以在内核中运行你自己写的程序。</p>
+<h2 id="七、最后"><a href="#七、最后" class="headerlink" title="七、最后"></a>七、最后</h2><p>最后我想说的是，上述过程是一个非常繁琐的过程，你需要有足够的耐心以及足够运行，首先gcc工具链和内核的编译安装是一个非常费事的过程，不仅如此你还遇到各种各种莫名其妙的问题，其中各个工具链版本的匹配便是一个令人极度头痛的问题.<br>博主足够幸运，在第一次运行上述过程中非常幸运的没有遇到版本不匹配的问题，希望诸位也能如此幸运。</p>
+<h2 id="八、最后的最后"><a href="#八、最后的最后" class="headerlink" title="八、最后的最后"></a>八、最后的最后</h2><p>近期因为各种原因需要重新使用最新版本复现上述过程，耗时近3天遇到了各种各样的问题。最后，在师兄的提示下，选择了sifive公司的集成工具。完成上述工程只需要：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ git <span class="built_in">clone</span> --recursive https://github.com/sifive/freedom-u-sdk</span><br><span class="line">$ <span class="built_in">cd</span> freedom-u-sdk</span><br><span class="line">$ make all</span><br><span class="line">$ make qemu</span><br></pre></td></tr></table></figure>
+<p>接下来你就会发现，自己之前所做的一切努力在别人看来只不过一个脚本就能解决，并且你不会想到sifive为你移植多少依赖库。。。<br>最后给大家送上一个运行界面图（默认用户名为：root，密码为：sifive）：</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="/img/sifive.png" alt="Alt text" title="">
+                </div>
+                <div class="image-caption">Alt text</div>
+            </figure>
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2018-02-02T12:12:35.000Z" itemprop="dateUpdated">2018-02-02 20:12:35</time>
+</span><br>
+
+
+        
+        这里可以写作者留言，标签和 hexo 中所有变量及辅助函数等均可调用，示例：<a href="/2018/02/02/qemu-run-riscv/" target="_blank" rel="external">http://changzihao.me/2018/02/02/qemu-run-riscv/</a>
+        
+    </div>
+    
+    <footer>
+        <a href="http://changzihao.me">
+            <img src="/img/avatar.jpg" alt="Chang Zihao">
+            Chang Zihao
+        </a>
+    </footer>
+</blockquote>
+
+        
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/qemu/">qemu</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/riscv/">riscv</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://changzihao.me/2018/02/02/qemu-run-riscv/&title=《qemu运行riscv linux》 — Chang Zihao&pic=http://changzihao.me/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://changzihao.me/2018/02/02/qemu-run-riscv/&title=《qemu运行riscv linux》 — Chang Zihao&source=" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://changzihao.me/2018/02/02/qemu-run-riscv/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《qemu运行riscv linux》 — Chang Zihao&url=http://changzihao.me/2018/02/02/qemu-run-riscv/&via=http://changzihao.me" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://changzihao.me/2018/02/02/qemu-run-riscv/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between flex-row-reverse">
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2018/02/02/粒子群算法-PSO-Python-实现/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">粒子群算法(PSO) Python 实现</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+<section class="comments" id="comments">
+    <div id="gitment_thread"></div>
+    <link rel="stylesheet" href="//unpkg.com/gitment/style/default.css">
+    <script src="//unpkg.com/gitment/dist/gitment.browser.js"></script>
+    <script>
+        var gitment = new Gitment({
+            owner: 'ChangZihao',
+            repo: 'Blog-comment',
+            oauth: {
+                client_id: '38962dd81493c63dc7ac',
+                client_secret: '39abb3abdab52809d3324ac4e2bc17afc20311cb',
+            },
+        })
+        gitment.render('comments')
+    </script>
+</section>
+
+
+
+
+
+
+
+</article>
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        谢谢大爷~
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/wechat.jpg" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check"
+                data-wechat="/img/wechat.jpg" data-alipay="/img/alipay.jpg">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>Chang Zihao &copy; 2015 - 2018</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://changzihao.me/2018/02/02/qemu-run-riscv/&title=《qemu运行riscv linux》 — Chang Zihao&pic=http://changzihao.me/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://changzihao.me/2018/02/02/qemu-run-riscv/&title=《qemu运行riscv linux》 — Chang Zihao&source=" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://changzihao.me/2018/02/02/qemu-run-riscv/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《qemu运行riscv linux》 — Chang Zihao&url=http://changzihao.me/2018/02/02/qemu-run-riscv/&via=http://changzihao.me" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://changzihao.me/2018/02/02/qemu-run-riscv/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=http://changzihao.me/2018/02/02/qemu-run-riscv/" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
+
+
+</script>
+
+<script src="/js/main.min.js?v=1.7.2"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="/js/search.min.js?v=1.7.2" async></script>
+
+
+
+
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = '页面崩溃了，快回来！';
+            clearTimeout(titleTime);
+        } else {
+            document.title = '(つェ⊂)咦!又好了!';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
+</script>
+
+
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</body>
+</html>
