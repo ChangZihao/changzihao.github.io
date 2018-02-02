@@ -28,10 +28,12 @@
 <meta property="og:site_name" content="Hello World!">
 <meta property="og:description" content="qemu运行riscv linux过程：在物理服务器上安装qemu模拟器，模拟器中运行基于riscv指令集编译的linux镜像文件。 工具集合：  riscv-qemu（模拟器，可以模拟运行riscv指令集的程序或镜像） riscv-tools（基于riscv指令集的交叉编译工具） riscv-pk（用于包装内核文件vmlinux） busybox(用于给linux镜像安装基本命令，如ls，cat">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2018-02-02T01:56:21.000Z">
+<meta property="og:image" content="http://yoursite.com/img/sifive.png">
+<meta property="og:updated_time" content="2018-02-02T02:06:04.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="qemu运行riscv linux">
 <meta name="twitter:description" content="qemu运行riscv linux过程：在物理服务器上安装qemu模拟器，模拟器中运行基于riscv指令集编译的linux镜像文件。 工具集合：  riscv-qemu（模拟器，可以模拟运行riscv指令集的程序或镜像） riscv-tools（基于riscv指令集的交叉编译工具） riscv-pk（用于包装内核文件vmlinux） busybox(用于给linux镜像安装基本命令，如ls，cat">
+<meta name="twitter:image" content="http://yoursite.com/img/sifive.png">
     
     <link rel="shortcut icon" href="/favicon.ico">
 	<link rel="stylesheet" href="/css/style.css?v=1.7.2">
@@ -256,6 +258,13 @@
 <h2 id="八、最后的最后"><a href="#八、最后的最后" class="headerlink" title="八、最后的最后"></a>八、最后的最后</h2><p>近期因为各种原因需要重新使用最新版本复现上述过程，耗时近3天遇到了各种各样的问题。最后，在师兄的提示下，选择了sifive公司的集成工具。完成上述工程只需要：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ git <span class="built_in">clone</span> --recursive https://github.com/sifive/freedom-u-sdk</span><br><span class="line">$ <span class="built_in">cd</span> freedom-u-sdk</span><br><span class="line">$ make all</span><br><span class="line">$ make qemu</span><br></pre></td></tr></table></figure>
 <p>接下来你就会发现，自己之前所做的一切努力在别人看来只不过一个脚本就能解决，并且你不会想到sifive为你移植多少依赖库。。。<br>最后给大家送上一个运行界面图（默认用户名为：root，密码为：sifive）：</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="/img/sifive.png" alt="Alt text" title="">
+                </div>
+                <div class="image-caption">Alt text</div>
+            </figure>
 
         </div>
 
@@ -264,7 +273,7 @@
     <div class="content">
         
 <span class="post-time">
-    最后更新时间：<time datetime="2018-02-02T01:56:21.000Z" itemprop="dateUpdated">2018-02-02 09:56:21</time>
+    最后更新时间：<time datetime="2018-02-02T02:06:04.000Z" itemprop="dateUpdated">2018-02-02 10:06:04</time>
 </span><br>
 
 
