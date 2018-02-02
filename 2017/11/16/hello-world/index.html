@@ -321,12 +321,12 @@
     <!-- Valine Comments script -->
     <script>
         var GUEST_INFO = ['nick','mail','link'];
-        var guest_info = 'nick,mail,link'.split(',').filter(function(item){
+        var guest_info = 'nick,mail'.split(',').filter(function(item){
           return GUEST_INFO.indexOf(item) > -1
         });
         new Valine({
             el: '#comments',
-            notify: 'true' == 'true',
+            notify: 'false' == 'true',
             verify: 'false' == 'true',
             appId: "V3f0lbQWh1loif1riAYvWpp8-gzGzoHsz",
             appKey: "bDPEGe6TJLHTero7DDITTsiM",
