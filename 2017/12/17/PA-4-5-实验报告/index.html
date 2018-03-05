@@ -15,25 +15,25 @@
     
     
     
-    <title>Hello World | Chang Zihao</title>
+    <title>PA 4/5 实验报告 | Chang Zihao</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     
     <meta name="theme-color" content="#3F51B5">
     
     
-    <meta name="keywords" content="hexo">
-    <meta name="description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub. Quick">
-<meta name="keywords" content="hexo">
+    <meta name="keywords" content="pa">
+    <meta name="description" content="PA 4/5 实验报告常子豪  changzihao17s@ict.ac.cn 2017/12/17 必答题: 分时多任务的具体过程请结合代码, 解释分页机制和硬件中断是如何支撑仙剑奇侠传和hello程序在我们的计算机系统(Nanos-lite, AM, NEMU)中分时运行的. 答：为了支持分页机制，实验中我们主要做了三部分的修改1.AM部分该部分主要包括_pte_init（初始化内核分页机制）">
+<meta name="keywords" content="pa">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Hello World">
-<meta property="og:url" content="http://changzihao.me/2017/11/16/hello-world/index.html">
+<meta property="og:title" content="PA 4&#x2F;5 实验报告">
+<meta property="og:url" content="http://changzihao.me/2017/12/17/PA-4-5-实验报告/index.html">
 <meta property="og:site_name" content="Chang Zihao">
-<meta property="og:description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub. Quick">
+<meta property="og:description" content="PA 4/5 实验报告常子豪  changzihao17s@ict.ac.cn 2017/12/17 必答题: 分时多任务的具体过程请结合代码, 解释分页机制和硬件中断是如何支撑仙剑奇侠传和hello程序在我们的计算机系统(Nanos-lite, AM, NEMU)中分时运行的. 答：为了支持分页机制，实验中我们主要做了三部分的修改1.AM部分该部分主要包括_pte_init（初始化内核分页机制）">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2017-11-17T10:08:23.000Z">
+<meta property="og:updated_time" content="2018-03-05T13:26:49.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Hello World">
-<meta name="twitter:description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub. Quick">
+<meta name="twitter:title" content="PA 4&#x2F;5 实验报告">
+<meta name="twitter:description" content="PA 4/5 实验报告常子豪  changzihao17s@ict.ac.cn 2017/12/17 必答题: 分时多任务的具体过程请结合代码, 解释分页机制和硬件中断是如何支撑仙剑奇侠传和hello程序在我们的计算机系统(Nanos-lite, AM, NEMU)中分时运行的. 答：为了支持分页机制，实验中我们主要做了三部分的修改1.AM部分该部分主要包括_pte_init（初始化内核分页机制）">
     
         <link rel="alternate" type="application/atom+xml" title="Chang Zihao" href="/atom.xml">
     
@@ -116,7 +116,7 @@
         <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
           <i class="icon icon-lg icon-navicon"></i>
         </a>
-        <div class="flex-col header-title ellipsis">Hello World</div>
+        <div class="flex-col header-title ellipsis">PA 4/5 实验报告</div>
         
         <div class="search-wrap" id="search-wrap">
             <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
@@ -138,15 +138,13 @@
 <header class="content-header post-header">
 
     <div class="container fade-scale">
-        <h1 style="text-align:left" class="title">Hello World</h1>
+        <h1 style="text-align:left" class="title">PA 4/5 实验报告</h1>
         <h5 class="subtitle">
             
-                <time datetime="2017-11-16T08:35:52.000Z" itemprop="datePublished" class="page-time">
-  2017-11-16
+                <time datetime="2017-12-17T13:22:37.000Z" itemprop="datePublished" class="page-time">
+  2017-12-17
 </time>
 
-
-	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/hexo/">hexo</a></li></ul>
 
             
         </h5>
@@ -163,22 +161,20 @@
     <aside class="post-widget">
         <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
             <h4>TOC</h4>
-            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Quick-Start"><span class="post-toc-number">1.</span> <span class="post-toc-text">Quick Start</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#Create-a-new-post"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">Create a new post</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#Run-server"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">Run server</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#Generate-static-files"><span class="post-toc-number">1.3.</span> <span class="post-toc-text">Generate static files</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#Deploy-to-remote-sites"><span class="post-toc-number">1.4.</span> <span class="post-toc-text">Deploy to remote sites</span></a></li></ol></li></ol>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#PA-4-5-实验报告"><span class="post-toc-number">1.</span> <span class="post-toc-text">PA 4/5 实验报告</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#必答题"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">必答题:</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#感悟"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">感悟:</span></a></li></ol></li></ol>
         </nav>
     </aside>
 
 
-<article id="post-hello-world"
+<article id="post-PA-4-5-实验报告"
   class="post-article article-type-post fade" itemprop="blogPost">
 
     <div class="post-card">
-        <h1 class="post-card-title">Hello World</h1>
+        <h1 class="post-card-title">PA 4/5 实验报告</h1>
         <div class="post-meta">
-            <time class="post-time" title="2017-11-16 16:35:52" datetime="2017-11-16T08:35:52.000Z"  itemprop="datePublished">2017-11-16</time>
+            <time class="post-time" title="2017-12-17 21:22:37" datetime="2017-12-17T13:22:37.000Z"  itemprop="datePublished">2017-12-17</time>
 
             
-	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/hexo/">hexo</a></li></ul>
-
 
 
             
@@ -189,15 +185,23 @@
 
         </div>
         <div class="post-content" id="post-content" itemprop="postContent">
-            <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="noopener">Deployment</a></p>
+            <h3 id="PA-4-5-实验报告"><a href="#PA-4-5-实验报告" class="headerlink" title="PA 4/5 实验报告"></a>PA 4/5 实验报告</h3><p>常子豪  changzihao17s@ict.ac.cn</p>
+<p>2017/12/17</p>
+<h4 id="必答题"><a href="#必答题" class="headerlink" title="必答题:"></a>必答题:</h4><ul>
+<li><p><u>分时多任务的具体过程</u>请结合代码, 解释分页机制和硬件中断是如何支撑仙剑奇侠传和hello程序在我们的计算机系统(Nanos-lite, AM, NEMU)中分时运行的.</p>
+<p>答：<br>为了支持分页机制，实验中我们主要做了三部分的修改<br>1.AM部分<br>该部分主要包括_pte_init（初始化内核分页机制）、 _map(虚拟地址到物理地址的映射)、_umake(在堆栈上初始化陷阱帧)、_switch(切换cr3)等，在nexus-am/am/arch/x86-nemu/src/pte.c中涉及的代码均是与硬件相关，是硬件层面支持页表机制的状态维护。<br>2、Nanos-lite部分<br>该部分与分页机会相关的内容主要包括loader（），将文件以页的形式载入内存，并通过_map建立虚拟地址也物理地址的映射。<br>3、Nemu部分<br>该部分对分页自己的支持主要是通过vaddr_write（）、vaddr_read（）在对内存进行读写时进行虚拟地址到物理地址的变换，这是整个分页机制得以真诚运行的关键。</p>
+<p>硬件中断机制<br>硬件中断是分时多任务实现的又一关键，而对于我们的实验来说，这关键中的关键便是时钟中断（_EVENT_IRQ_TIME），和内核自陷（_EVENT_TRAP）。通过这样两种中断保证操作系统中分时多任务机制的正常运行。</p>
+<p>总得来说，在整个分时多任务机制中，页表机制保证了操作系统的不同的进程按照相同的虚拟地址来对内存进程访问，这使得操作系统能够运行位置无关代码，同时也实现了按需分配内存和突破物理地址的上限。但是上述折现过程也仅仅是实现了多任务机制对内存资源的有效利用，而保证分时多任务的切换则是通过硬件中断机制得以实现。通过时钟中断来保证不同的进程能够根据一定规则相对公平的利用cpu实行，从而在宏观上实现多任务同时进行。</p>
+</li>
+</ul>
+<h4 id="感悟"><a href="#感悟" class="headerlink" title="感悟:"></a>感悟:</h4><p>本次的报告涵盖了pa4、pa5两部分的内容，主要涵盖了分支多任务、页表和浮点机制。在完成pa4、pa5的过程中，恰逢所选操作系统课程也讲解到相应部分，结合linux 0.11与pa不难发现，在现在操作系统的各种版本中分时多任务、页表机制是不可或缺的部分。尽管操作系统中的调度算法千变万化，但是其核心目标就是保证操作系统多个进程能够相对公平的运行，且能够满足用户的需求。而对于内存和文件系统的管理，现代操作系统几乎无一列外全采用分页式管理，可能不同版本操作系统在页表机制的实现上略有差异，但是其核心思想是一致的，对于内存的管理分页机制就是为了满足虚拟地址到物理地址的映射。<br>目前在实际应用中出现的硬件和操作系统的种类可能有成百上千种，我们不可能一一去了解其实现细节，但是只要能够掌握住了他们设计的初衷及其核心思想，无论今后接触哪一种新的硬件和操作系统都能够很快上手。我觉这才是在完成pa实验后真正应该取得的收获。</p>
+<p>pa实验到此基本结束，实现pa的过程也是一路跌跌撞撞。总得看来，我觉在整个pa实验中对与我个人来时主要的难点有一下三个：</p>
+<ol>
+<li>如何下手，虽然在很多时候在实验指导书中已经指明了应该从哪里开始，但是从一个现在有代码框架去按照自己的思路代码还是有一点难度的，很多时候当我花了很大精力去实现某一个功能时，可能后果头却在无意中发现框架中已经为我们提供了很多课调用的函数。就像nexus-am/am/arch/x86-nemu/include/x86.h中已经给出了很多虚拟地址转换中可能会用到的宏函数，但是因为没有看到，在实验中这些功能大多都是靠自己实现。这个可能还是与自己没有能详细阅读框架有关。</li>
+<li>debug ，在完成pa实验之后才深刻的领悟了，代码写完了才只是完成一半，或者一半都不到，而剩下一半是debug。在整个实验中，我遇到各种各样的奇怪的bug，而随着实验的推进，debug的难度也越来越大，影响最深的是在pa4中，实现系统调用时出现了问题，无论如果也找不出操作系统实现中的问题，最终在nemu的rtl操作中找了问题所在，因为没有考虑符号拓展shr在非32位情况下出错。</li>
+<li>如何提高代码效率，在运行打字游戏的实验中，需要在对内存进行写操作实现屏幕刷新。我第一次在实现没有考到性能因素按照自己的想法一个复制内容到内存的函数，结果游戏的帧数只有5帧左右，导致游戏根本无法流畅运行，但是后来思考了一下换成了库函数memcpy效率很大提升，帧数直接到达18帧。</li>
+</ol>
+<p>回想整个实验，pa给我带来的不仅是对x86指令集、分页机制、系统调用过程的一个深入了解。我觉得更改大的收获是让我了解到整个计算机协同工作的过程（nemu、am、nano-lite）和在一个相对较大的工程中，如何去维护代码结构、可读性、效率以及如果利用现有手段去寻找代码中的bug。<br>最后，我想说，自己写下的bug总有一天会早上门来，让你用百倍的代价去为他买单。所以希望自己以后能够少写bug。</p>
 
         </div>
 
@@ -206,12 +210,12 @@
     <div class="content">
         
 <span class="post-time">
-    最后更新时间：<time datetime="2017-11-17T10:08:23.000Z" itemprop="dateUpdated">2017-11-17 18:08:23</time>
+    最后更新时间：<time datetime="2018-03-05T13:26:49.000Z" itemprop="dateUpdated">2018-03-05 21:26:49</time>
 </span><br>
 
 
         
-        本文作者：Changzihao <br />  本文链接：<a href="/2017/11/16/hello-world/" target="_blank" rel="external">http://changzihao.me/2017/11/16/hello-world/</a> <br /> 版权声明：本博客所有文章除特别声明外，均采用 CC BY-NC-SA 3.0 许可协议。转载请注明出处
+        本文作者：Changzihao <br />  本文链接：<a href="/2017/12/17/PA-4-5-实验报告/" target="_blank" rel="external">http://changzihao.me/2017/12/17/PA-4-5-实验报告/</a> <br /> 版权声明：本博客所有文章除特别声明外，均采用 CC BY-NC-SA 3.0 许可协议。转载请注明出处
         
     </div>
     
@@ -232,7 +236,7 @@
 
         <div class="post-footer">
             
-	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/hexo/">hexo</a></li></ul>
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/pa/">pa</a></li></ul>
 
 
             
@@ -242,7 +246,7 @@
 <div class="page-share" id="pageShare">
     <ul class="reset share-icons">
       <li>
-        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://changzihao.me/2017/11/16/hello-world/&title=《Hello World》 — Chang Zihao&pic=http://changzihao.me/img/avatar.jpg" data-title="微博">
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://changzihao.me/2017/12/17/PA-4-5-实验报告/&title=《PA 4/5 实验报告》 — Chang Zihao&pic=http://changzihao.me/img/avatar.jpg" data-title="微博">
           <i class="icon icon-weibo"></i>
         </a>
       </li>
@@ -252,22 +256,22 @@
         </a>
       </li>
       <li>
-        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://changzihao.me/2017/11/16/hello-world/&title=《Hello World》 — Chang Zihao&source=" data-title=" QQ">
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://changzihao.me/2017/12/17/PA-4-5-实验报告/&title=《PA 4/5 实验报告》 — Chang Zihao&source=" data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
       </li>
       <li>
-        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://changzihao.me/2017/11/16/hello-world/" data-title=" Facebook">
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://changzihao.me/2017/12/17/PA-4-5-实验报告/" data-title=" Facebook">
           <i class="icon icon-facebook"></i>
         </a>
       </li>
       <li>
-        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Hello World》 — Chang Zihao&url=http://changzihao.me/2017/11/16/hello-world/&via=http://changzihao.me" data-title=" Twitter">
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《PA 4/5 实验报告》 — Chang Zihao&url=http://changzihao.me/2017/12/17/PA-4-5-实验报告/&via=http://changzihao.me" data-title=" Twitter">
           <i class="icon icon-twitter"></i>
         </a>
       </li>
       <li>
-        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://changzihao.me/2017/11/16/hello-world/" data-title=" Google+">
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://changzihao.me/2017/12/17/PA-4-5-实验报告/" data-title=" Google+">
           <i class="icon icon-google-plus"></i>
         </a>
       </li>
@@ -290,18 +294,18 @@
 <nav class="post-nav flex-row flex-justify-between">
   
     <div class="waves-block waves-effect prev">
-      <a href="/2017/12/17/PA-4-5-实验报告/" id="post-prev" class="post-nav-link">
+      <a href="/2018/02/02/粒子群算法-PSO-Python-实现/" id="post-prev" class="post-nav-link">
         <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
-        <h4 class="title">PA 4/5 实验报告</h4>
+        <h4 class="title">粒子群算法(PSO) Python 实现</h4>
       </a>
     </div>
   
 
   
     <div class="waves-block waves-effect next">
-      <a href="/2017/11/03/PA-2-3-实验报告/" id="post-next" class="post-nav-link">
+      <a href="/2017/11/16/hello-world/" id="post-next" class="post-nav-link">
         <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
-        <h4 class="title">PA 2/3 实验报告</h4>
+        <h4 class="title">Hello World</h4>
       </a>
     </div>
   
@@ -419,7 +423,7 @@
 <div class="global-share" id="globalShare">
     <ul class="reset share-icons">
       <li>
-        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://changzihao.me/2017/11/16/hello-world/&title=《Hello World》 — Chang Zihao&pic=http://changzihao.me/img/avatar.jpg" data-title="微博">
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://changzihao.me/2017/12/17/PA-4-5-实验报告/&title=《PA 4/5 实验报告》 — Chang Zihao&pic=http://changzihao.me/img/avatar.jpg" data-title="微博">
           <i class="icon icon-weibo"></i>
         </a>
       </li>
@@ -429,22 +433,22 @@
         </a>
       </li>
       <li>
-        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://changzihao.me/2017/11/16/hello-world/&title=《Hello World》 — Chang Zihao&source=" data-title=" QQ">
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://changzihao.me/2017/12/17/PA-4-5-实验报告/&title=《PA 4/5 实验报告》 — Chang Zihao&source=" data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
       </li>
       <li>
-        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://changzihao.me/2017/11/16/hello-world/" data-title=" Facebook">
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://changzihao.me/2017/12/17/PA-4-5-实验报告/" data-title=" Facebook">
           <i class="icon icon-facebook"></i>
         </a>
       </li>
       <li>
-        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Hello World》 — Chang Zihao&url=http://changzihao.me/2017/11/16/hello-world/&via=http://changzihao.me" data-title=" Twitter">
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《PA 4/5 实验报告》 — Chang Zihao&url=http://changzihao.me/2017/12/17/PA-4-5-实验报告/&via=http://changzihao.me" data-title=" Twitter">
           <i class="icon icon-twitter"></i>
         </a>
       </li>
       <li>
-        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://changzihao.me/2017/11/16/hello-world/" data-title=" Google+">
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://changzihao.me/2017/12/17/PA-4-5-实验报告/" data-title=" Google+">
           <i class="icon icon-google-plus"></i>
         </a>
       </li>
@@ -455,7 +459,7 @@
 <div class="page-modal wx-share" id="wxShare">
     <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
-    <img src="//api.qrserver.com/v1/create-qr-code/?data=http://changzihao.me/2017/11/16/hello-world/" alt="微信分享二维码">
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=http://changzihao.me/2017/12/17/PA-4-5-实验报告/" alt="微信分享二维码">
 </div>
 
 
