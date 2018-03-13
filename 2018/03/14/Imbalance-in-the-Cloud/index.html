@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    <meta name="google-site-verification" content="20upjTQOdgISFY-1CQwe5qpfxVSl9gwVHdzK_kCyipo">
+    
+    
+    
+    <title>Imbalance in the Cloud: an Analysis on Alibaba Cluster Trace | Chang Zihao</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="论文,阿里云,不均衡,利用率">
+    <meta name="description" content="背景：阿里在2017年09月05日首次公布了该数据，trace数据是ClusterData在2017年08月12日小时内生产群集的群集信息，并包含大约1.3k台运行在线服务和批处理作业的机器。链接：https://www.researchgate.net/publication/322512121_Imbalance_in_the_cloud_An_analysis_on_Alibaba_clus">
+<meta name="keywords" content="论文,阿里云,不均衡,利用率">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Imbalance in the Cloud: an Analysis on Alibaba Cluster Trace">
+<meta property="og:url" content="http://changzihao.me/2018/03/14/Imbalance-in-the-Cloud/index.html">
+<meta property="og:site_name" content="Chang Zihao">
+<meta property="og:description" content="背景：阿里在2017年09月05日首次公布了该数据，trace数据是ClusterData在2017年08月12日小时内生产群集的群集信息，并包含大约1.3k台运行在线服务和批处理作业的机器。链接：https://www.researchgate.net/publication/322512121_Imbalance_in_the_cloud_An_analysis_on_Alibaba_clus">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-03-13T16:13:55.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Imbalance in the Cloud: an Analysis on Alibaba Cluster Trace">
+<meta name="twitter:description" content="背景：阿里在2017年09月05日首次公布了该数据，trace数据是ClusterData在2017年08月12日小时内生产群集的群集信息，并包含大约1.3k台运行在线服务和批处理作业的机器。链接：https://www.researchgate.net/publication/322512121_Imbalance_in_the_cloud_An_analysis_on_Alibaba_clus">
+    
+        <link rel="alternate" type="application/atom+xml" title="Chang Zihao" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+	<link rel="stylesheet" href="/css/style.css?v=1.7.2">
+	<script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+	  <div style="text-align:center">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+			<img src="/img/avatar.jpg">
+        </a>
+	  </div>
+        <hgroup class="introduce">
+          <h5 style="text-align:center" class="nickname">Chang Zihao</h5>
+          <a href="mailto:changzihao17@mails.ucas.edu.cn" title="changzihao17@mails.ucas.edu.cn" class="mail">changzihao17@mails.ucas.edu.cn</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                Home
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                Archives
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                Tags
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/changzihao" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://weibo.com/u/1954058494?refer_flag=1001030201_&is_all=1" target="_blank" >
+                <i class="icon icon-lg icon-weibo"></i>
+                Weibo
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">Imbalance in the Cloud: an Analysis on Alibaba Cluster Trace</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 style="text-align:left" class="title">Imbalance in the Cloud: an Analysis on Alibaba Cluster Trace</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2018-03-13T16:07:00.000Z" itemprop="datePublished" class="page-time">
+  2018-03-14
+</time>
+
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#简介"><span class="post-toc-number">1.</span> <span class="post-toc-text">简介</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#数据介绍"><span class="post-toc-number">2.</span> <span class="post-toc-text">数据介绍</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#机器使用不均衡的情况"><span class="post-toc-number">3.</span> <span class="post-toc-text">机器使用不均衡的情况</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#工作负载的不均衡"><span class="post-toc-number">4.</span> <span class="post-toc-text">工作负载的不均衡</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#资源需求的不均衡"><span class="post-toc-number">4.0.0.1.</span> <span class="post-toc-text">资源需求的不均衡</span></a></li><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#批量工作负载的不均衡"><span class="post-toc-number">4.0.0.2.</span> <span class="post-toc-text">批量工作负载的不均衡</span></a></li><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#一些思考"><span class="post-toc-number">4.0.0.3.</span> <span class="post-toc-text">一些思考</span></a></li></ol></li></ol></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#结论"><span class="post-toc-number">5.</span> <span class="post-toc-text">结论</span></a></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-Imbalance-in-the-Cloud"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">Imbalance in the Cloud: an Analysis on Alibaba Cluster Trace</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2018-03-14 00:07:00" datetime="2018-03-13T16:07:00.000Z"  itemprop="datePublished">2018-03-14</time>
+
+            
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <p>背景：阿里在2017年09月05日首次公布了该数据，trace数据是ClusterData在2017年08月12日小时内生产群集的群集信息，并包含大约1.3k台运行在线服务和批处理作业的机器。<br>链接：<a href="https://www.researchgate.net/publication/322512121_Imbalance_in_the_cloud_An_analysis_on_Alibaba_cluster_trace" target="_blank" rel="noopener">https://www.researchgate.net/publication/322512121_Imbalance_in_the_cloud_An_analysis_on_Alibaba_cluster_trace</a> </p>
+<h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>为了提高资源利用率并为云设计智能调度程序，了解大型云数据中心的工作负载特征和机器利用率。在本文中，对2017年9月阿里巴巴新发布的跟踪数据集进行了深入分析，包括11089个在线服务作业的详细统计数据和1295个超过12小时的1300台机器上的12951个批处理作业。这是分析阿里巴巴公布trace数据后的第一份工作之一。分析了关于阿里云不同类型的几点不平衡。这种不平衡加剧了云资源管理的复杂性和挑战性，这可能会导致严重的资源浪费和低集群利用率。 </p>
+<ol>
+<li>空间失衡：跨机器和工作负载的异构资源利用率。</li>
+<li>时间不平衡：每个工作负载和机器的资源使用量随时间变化很大。 </li>
+<li>每个工作负载的多维资源（CPU和内存）利用率不平衡。 </li>
+<li>在线服务和脱机批处理作业之间的资源需求和运行时间统计（持续时间和任务编号）不平衡。</li>
+</ol>
+<p>文章认为，在资源分配过程中调节这种不平衡对于提高集群效率至关重要，并会激励新资源管理者和调度人员的出现。</p>
+<h2 id="数据介绍"><a href="#数据介绍" class="headerlink" title="数据介绍"></a>数据介绍</h2><p>trace包括数据三种类型，跟踪中有三种类型的数据：批处理和在线服务的不同时刻的工作负载、机器利用率和运行时间信息。 出于机密原因，跟踪中的部分信息被模糊处理。</p>
+<ul>
+<li><u>机器利用率</u> 被描述为两个栏：“机器事件”和“机器资源利用率”。容量反映了每台机器的标准化多维物理容量。每个维度（CPU核心，RAM大小）都是独立标准化的。</li>
+<li><u>批处理工作负载</u> 被描述为两个栏：“实例”和“任务”。 户以Job的形式提交批处理工作负载（不包含在trace中）。每个Job都由多个任务组成，每个任务根据数据依赖性形成一个DAG。它们由多个实例组成，并执行不同的计算逻辑。实例是批处理工作负载的最小调度单位。任务中的所有实例都执行完全相同的多资源需求的二进制代码，但处理不同部分的数据。</li>
+<li><u>在线服务作业</u> 由两个栏描述：“服务实例事件”和“服务实例使用情况”。trace仅包含两种类型的实例事件。一个创建事件，另一个完成。创建事件记录服务实例的起始时间，而移除事件表示服务实例的完成时间。每个实例是最小的调度单元，并在Linux容器（LXC）的轻量级虚拟机中运行。它也可以被视为一项完整的服务工作。</li>
+</ul>
+<p>批处理或服务工作负载的任何一个实例都以保留的形式表达其资源需求，这在现代资源管理员中是常用的。他们的Fuxi集群管理员利用资源分配的接纳控制策略。上述两种机制的结合被认为是近期研究中群集利用率低和资源低效的根本原因。</p>
+<h2 id="机器使用不均衡的情况"><a href="#机器使用不均衡的情况" class="headerlink" title="机器使用不均衡的情况"></a>机器使用不均衡的情况</h2><p>图1绘出了12小时内群集中每台计算机的资源利用情况。trace提供了每台机器每个采样时间的标准化CPU和内存使用信息。所有数据都从“机器事件”和“机器资源利用率”表中检索。<br>我一个有趣的观察是，一部分机器（ID从400到600和900到1100）的CPU使用率总是高于其他机器，而他们的内存使用率相对较低。在群集运行期间，大多数机器的CPU利用率正在逐渐增加，同时内存利用率在下降。因此，当观察到跟踪期结束时（从11到12小时）CPU的最高利用率和机器的最低内存利用率。相比之下，CPU在开始时一直处于空闲状态（从0到3.5小时），而内存则保持高负载状态。<br>这表明，云数据中心机器存在显着的空间不平衡（跨机器的资源异构利用）和时间不平衡（每台机器随时间变化的资源使用情况）。<br>从图2中，我们看到每台机器资源使用情况的细粒度信息。我们总结了每台采样时间1300台机器的平均，最小和最大利用率。 CPU和内存使用都被标准化采样周期内，每台机器的平均CPU利用率在40％以内，最高维持在60％左右。每台机器的平均内存利用率在60％以内，最高约为90％。绿线表示每采样时间所有机器中利用率最低的机器利用率。这种最小用途的CPU和内存利用率接近于零。从8小时到10小时，CPU的最大利用率迅速攀升，达到90％以上，而平均CPU利用率保持稳定。通过比较这些机器的最小，平均和最大使用量之间的巨大差距，我们观察到了集群中利用率的巨大空间不平衡。它表明，云数据中心需要新的调度器来平衡负载，避免机器利用的热点，从而提高集群效率。与CPU使用情况不同，内存使用在此期间保持稳定。它还表明工作负载的多维资源利用率（CPU和内存）的比例失衡。<br>此外，我们观察到群集中CPU和内存资源的严重浪费和资源低效率。但是，由于机器的最大使用率相对较低，通过全面了解工作负载的资源需求并进行适当的保留，CPU利用率有机会大大提高。尽管如此，提高内存利用率仍然具有挑战性，因为工作性能对机器相对较高的最高使用率非常敏感。简单地减少保留以提高集群内存效率可能会导致严重的性能下降。最近的研究通过提出更好的需求估计提出了一种解决方案。我们认为，云数据中心需要新的资源管理者和调度人员，通过避免上述不平衡和低利用率来提高集群资源的效率。</p>
+<h2 id="工作负载的不均衡"><a href="#工作负载的不均衡" class="headerlink" title="工作负载的不均衡"></a>工作负载的不均衡</h2><h5 id="资源需求的不均衡"><a href="#资源需求的不均衡" class="headerlink" title="资源需求的不均衡"></a>资源需求的不均衡</h5><ol>
+<li><u>批量工作负载</u>: 大多数批处理作业为每个任务 <strong>请求</strong> 1到100个CPU核心，而最大请求数量大于1000。相比之下，我们观察到大多数作业使用0.01到1个核心CPU每个任务，而很少 <strong>使用</strong> 超过100个核心。而大多数任务要求每个实例的规格化内存大小在0.05到0.15之间。虽然他们通常使用0.001到0.05的尺寸。</li>
+<li><u>服务工作负载</u>: 大多数服务实例在执行期间稳定地使用了少于10％的CPU资源。但是，总有一部分实例占用60％到90％的资源，而有些则使用接近零的内核。规范化的平均内存利用率稳定在45％，最大值保持在79％，最小值保持在1％。与CPU的资源不同，它表明有机会做出更好的保留来提高内存利用率。</li>
+</ol>
+<p>用户总是倾向于过度配置资源以保证SLA对延迟敏感的生产服务。但是，这种极低的利用率会为大规模云数据中心带来难以置信的高成本。同时，在线服务作业永久保留和保存资源，由于受限主机资源不足，可能会导致集群负载不均（热点）或工作不足。</p>
+<h5 id="批量工作负载的不均衡"><a href="#批量工作负载的不均衡" class="headerlink" title="批量工作负载的不均衡"></a>批量工作负载的不均衡</h5><p>图9绘出了批处理作业的持续时间分布。我们利用同一作业中最早创建的任务和最晚完成的任务的持续时间之间的差异来指示作业运行时间。90％的工作时间少于0.19小时，而最长的工作时间长达10小时。详细地说，超过12481个Job的运行时间不到一个半小时，超过12705个Job的运行时间不到1个小时。短Job压倒性地占据了集群。表明了工作持续时间的不平衡。人们可以考虑这些现象，并利用适当的调度算法，如SJF（最短作业优先）来加速短作业的执行，同时最大化集群完工时间。</p>
+<h5 id="一些思考"><a href="#一些思考" class="headerlink" title="一些思考"></a>一些思考</h5><p>由于阿里云数据中心的预留机制和不平衡的现象，将服务和批量作业放置在相同机器对提高集群效率并不有效。未来，可以利用容器的灵活分配和不平衡知识来显着提高混合集群的资源利用率。<br>另外，通过考虑数据的局限性，在调度过程中不平衡现象会加剧。如何通过适当的资源分配和调度决策来平衡不平衡救济，数据局部性和SLA（性能）之间的权衡是非常具有挑战性的。它也成为我们未来的研究方向。</p>
+<h2 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h2><p>了解大型云数据中心中的机器特征和工作负载行为对于最大限度地提高群集资源效率至关重要。在本文中，对阿里巴巴集团2017年9月新发布的跟踪数据集进行了深入分析，涵盖1300多台服务器，超过12小时。这是分析阿里巴巴公众痕迹的第一份工作之一。<br>文章研究了混部集群的详细运行时特性，该集群可以同时在线服务和脱机批处理作业，并发现了关于云中不平衡的一些有趣见解。这种不平衡加剧了云集群管理的复杂性和挑战性，导致严重的资源低效率。文章认为，适应机器和工作负载的不平衡对于集群效率至关重要，并且会激励新资源管理者和调度者的设计和出现。</p>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2018-03-13T16:13:55.000Z" itemprop="dateUpdated">2018-03-14 00:13:55</time>
+</span><br>
+
+
+        
+        本文作者：Changzihao <br />  本文链接：<a href="/2018/03/14/Imbalance-in-the-Cloud/" target="_blank" rel="external">http://changzihao.me/2018/03/14/Imbalance-in-the-Cloud/</a> <br /> 版权声明：本博客所有文章除特别声明外，均采用 CC BY-NC-SA 3.0 许可协议。转载请注明出处
+        
+    </div>
+    
+    <footer>
+        <a href="http://changzihao.me">
+            <img src="/img/avatar.jpg" alt="Chang Zihao">
+            Chang Zihao
+        </a>
+    </footer>
+</blockquote>
+
+        
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/不均衡/">不均衡</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/利用率/">利用率</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/论文/">论文</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/阿里云/">阿里云</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://changzihao.me/2018/03/14/Imbalance-in-the-Cloud/&title=《Imbalance in the Cloud: an Analysis on Alibaba Cluster Trace》 — Chang Zihao&pic=http://changzihao.me/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://changzihao.me/2018/03/14/Imbalance-in-the-Cloud/&title=《Imbalance in the Cloud: an Analysis on Alibaba Cluster Trace》 — Chang Zihao&source=" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://changzihao.me/2018/03/14/Imbalance-in-the-Cloud/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Imbalance in the Cloud: an Analysis on Alibaba Cluster Trace》 — Chang Zihao&url=http://changzihao.me/2018/03/14/Imbalance-in-the-Cloud/&via=http://changzihao.me" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://changzihao.me/2018/03/14/Imbalance-in-the-Cloud/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between flex-row-reverse">
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2018/02/02/qemu-run-riscv/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">qemu运行riscv linux</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+    <!-- Valine Comments -->
+    <div class="comments vcomment" id="comments"></div>
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+    <script src="//unpkg.com/valine@latest/dist/Valine.min.js"></script>
+    <!-- Valine Comments script -->
+    <script>
+        var GUEST_INFO = ['nick','mail','link'];
+        var guest_info = 'nick,mail'.split(',').filter(function(item){
+          return GUEST_INFO.indexOf(item) > -1
+        });
+        new Valine({
+            el: '#comments',
+            notify: 'false' == 'true',
+            verify: 'false' == 'true',
+            appId: "V3f0lbQWh1loif1riAYvWpp8-gzGzoHsz",
+            appKey: "bDPEGe6TJLHTero7DDITTsiM",
+            avatar: "mm",
+            placeholder: "Just go go",
+            guest_info: guest_info.length == 0 ? GUEST_INFO : guest_info,
+            pageSize: "10"
+        })
+    </script>
+    <!-- Valine Comments end -->
+
+
+
+
+</article>
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        谢谢大爷~
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/wechat.jpg" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check"
+                data-wechat="/img/wechat.jpg" data-alipay="/img/alipay.jpg">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>Chang Zihao &copy; 2017 - 2018</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://changzihao.me/2018/03/14/Imbalance-in-the-Cloud/&title=《Imbalance in the Cloud: an Analysis on Alibaba Cluster Trace》 — Chang Zihao&pic=http://changzihao.me/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://changzihao.me/2018/03/14/Imbalance-in-the-Cloud/&title=《Imbalance in the Cloud: an Analysis on Alibaba Cluster Trace》 — Chang Zihao&source=" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://changzihao.me/2018/03/14/Imbalance-in-the-Cloud/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Imbalance in the Cloud: an Analysis on Alibaba Cluster Trace》 — Chang Zihao&url=http://changzihao.me/2018/03/14/Imbalance-in-the-Cloud/&via=http://changzihao.me" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://changzihao.me/2018/03/14/Imbalance-in-the-Cloud/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=http://changzihao.me/2018/03/14/Imbalance-in-the-Cloud/" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
+
+
+</script>
+
+<script src="/js/main.min.js?v=1.7.2"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="/js/search.min.js?v=1.7.2" async></script>
+
+
+
+
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = '页面崩溃了，快回来！';
+            clearTimeout(titleTime);
+        } else {
+            document.title = '咦!又好了!';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
+</script>
+
+
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</body>
+</html>
