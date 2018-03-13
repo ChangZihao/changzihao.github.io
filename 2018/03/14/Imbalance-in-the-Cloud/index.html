@@ -30,7 +30,7 @@
 <meta property="og:site_name" content="Chang Zihao">
 <meta property="og:description" content="背景：阿里在2017年09月05日首次公布了该数据，trace数据是ClusterData在2017年08月12日小时内生产群集的群集信息，并包含大约1.3k台运行在线服务和批处理作业的机器。链接：https://www.researchgate.net/publication/322512121_Imbalance_in_the_cloud_An_analysis_on_Alibaba_clus">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2018-03-13T16:13:55.000Z">
+<meta property="og:updated_time" content="2018-03-13T16:16:39.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Imbalance in the Cloud: an Analysis on Alibaba Cluster Trace">
 <meta name="twitter:description" content="背景：阿里在2017年09月05日首次公布了该数据，trace数据是ClusterData在2017年08月12日小时内生产群集的群集信息，并包含大约1.3k台运行在线服务和批处理作业的机器。链接：https://www.researchgate.net/publication/322512121_Imbalance_in_the_cloud_An_analysis_on_Alibaba_clus">
@@ -208,7 +208,7 @@
 </ol>
 <p>用户总是倾向于过度配置资源以保证SLA对延迟敏感的生产服务。但是，这种极低的利用率会为大规模云数据中心带来难以置信的高成本。同时，在线服务作业永久保留和保存资源，由于受限主机资源不足，可能会导致集群负载不均（热点）或工作不足。</p>
 <h5 id="批量工作负载的不均衡"><a href="#批量工作负载的不均衡" class="headerlink" title="批量工作负载的不均衡"></a>批量工作负载的不均衡</h5><p>图9绘出了批处理作业的持续时间分布。我们利用同一作业中最早创建的任务和最晚完成的任务的持续时间之间的差异来指示作业运行时间。90％的工作时间少于0.19小时，而最长的工作时间长达10小时。详细地说，超过12481个Job的运行时间不到一个半小时，超过12705个Job的运行时间不到1个小时。短Job压倒性地占据了集群。表明了工作持续时间的不平衡。人们可以考虑这些现象，并利用适当的调度算法，如SJF（最短作业优先）来加速短作业的执行，同时最大化集群完工时间。</p>
-<h5 id="一些思考"><a href="#一些思考" class="headerlink" title="一些思考"></a>一些思考</h5><p>由于阿里云数据中心的预留机制和不平衡的现象，将服务和批量作业放置在相同机器对提高集群效率并不有效。未来，可以利用容器的灵活分配和不平衡知识来显着提高混合集群的资源利用率。<br>另外，通过考虑数据的局限性，在调度过程中不平衡现象会加剧。如何通过适当的资源分配和调度决策来平衡不平衡救济，数据局部性和SLA（性能）之间的权衡是非常具有挑战性的。它也成为我们未来的研究方向。</p>
+<h5 id="一些思考"><a href="#一些思考" class="headerlink" title="一些思考"></a>一些思考</h5><p>由于阿里云数据中心的预留机制和不平衡的现象，将服务和批量作业放置在相同机器对提高集群效率并不有效。未来，可以利用容器的灵活分配和不平衡知识来显着提高混合集群的资源利用率。<br>另外，通过考虑数据的局限性，在调度过程中不平衡现象会加剧。如何通过适当的资源分配和调度决策来平衡不平衡救济，数据局部性和SLA（性能）之间的权衡是非常具有挑战性的。它也成为我们未来的研究方向。  </p>
 <h2 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h2><p>了解大型云数据中心中的机器特征和工作负载行为对于最大限度地提高群集资源效率至关重要。在本文中，对阿里巴巴集团2017年9月新发布的跟踪数据集进行了深入分析，涵盖1300多台服务器，超过12小时。这是分析阿里巴巴公众痕迹的第一份工作之一。<br>文章研究了混部集群的详细运行时特性，该集群可以同时在线服务和脱机批处理作业，并发现了关于云中不平衡的一些有趣见解。这种不平衡加剧了云集群管理的复杂性和挑战性，导致严重的资源低效率。文章认为，适应机器和工作负载的不平衡对于集群效率至关重要，并且会激励新资源管理者和调度者的设计和出现。</p>
 
         </div>
@@ -218,7 +218,7 @@
     <div class="content">
         
 <span class="post-time">
-    最后更新时间：<time datetime="2018-03-13T16:13:55.000Z" itemprop="dateUpdated">2018-03-14 00:13:55</time>
+    最后更新时间：<time datetime="2018-03-13T16:16:39.000Z" itemprop="dateUpdated">2018-03-14 00:16:39</time>
 </span><br>
 
 
@@ -523,20 +523,5 @@ var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
 
 
 
-<script type="text/x-mathjax-config">
-    MathJax.Hub.Config({
-        tex2jax: {
-            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
-            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
-            processEscapes: true
-        }
-    });
-    MathJax.Hub.Queue(function() {
-        var all = MathJax.Hub.getAllJax();
-        for (var i = 0; i < all.length; ++i)
-            all[i].SourceElement().parentNode.className += ' has-jax';
-    });
-</script>
-<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 </body>
 </html>
