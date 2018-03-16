@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    <meta name="google-site-verification" content="20upjTQOdgISFY-1CQwe5qpfxVSl9gwVHdzK_kCyipo">
+    
+    
+    
+    <title>分布式系统设计：简介 | Chang Zihao</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="">
+    <meta name="description" content="当今世界的持续在线的应用程序和API具有可用性和可靠性要求，在几十年前这些特性在全球范围内仅少量关键任务服务需要。同样，服务的快速，病毒式增长的潜力意味着每一个应用程序都必须按照用户的需求立即进行扩展。这些限制和要求意味着几乎所有的应用程序（无论是消费者移动应用程序还是后端支付应用程序）都需要构建成为分布式系统。 但构建分布式系统具有挑战性。通常，他们是一次性定制解决方案。通过这种方式，在开发现代">
+<meta property="og:type" content="article">
+<meta property="og:title" content="分布式系统设计：简介">
+<meta property="og:url" content="http://changzihao.me/2018/03/16/分布式系统设计：简介/index.html">
+<meta property="og:site_name" content="Chang Zihao">
+<meta property="og:description" content="当今世界的持续在线的应用程序和API具有可用性和可靠性要求，在几十年前这些特性在全球范围内仅少量关键任务服务需要。同样，服务的快速，病毒式增长的潜力意味着每一个应用程序都必须按照用户的需求立即进行扩展。这些限制和要求意味着几乎所有的应用程序（无论是消费者移动应用程序还是后端支付应用程序）都需要构建成为分布式系统。 但构建分布式系统具有挑战性。通常，他们是一次性定制解决方案。通过这种方式，在开发现代">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-03-16T14:42:34.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="分布式系统设计：简介">
+<meta name="twitter:description" content="当今世界的持续在线的应用程序和API具有可用性和可靠性要求，在几十年前这些特性在全球范围内仅少量关键任务服务需要。同样，服务的快速，病毒式增长的潜力意味着每一个应用程序都必须按照用户的需求立即进行扩展。这些限制和要求意味着几乎所有的应用程序（无论是消费者移动应用程序还是后端支付应用程序）都需要构建成为分布式系统。 但构建分布式系统具有挑战性。通常，他们是一次性定制解决方案。通过这种方式，在开发现代">
+    
+        <link rel="alternate" type="application/atom+xml" title="Chang Zihao" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+	<link rel="stylesheet" href="/css/style.css?v=1.7.2">
+	<script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+	  <div style="text-align:center">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+			<img src="/img/avatar.jpg">
+        </a>
+	  </div>
+        <hgroup class="introduce">
+          <h5 style="text-align:center" class="nickname">Chang Zihao</h5>
+          <a href="mailto:changzihao17@mails.ucas.edu.cn" title="changzihao17@mails.ucas.edu.cn" class="mail">changzihao17@mails.ucas.edu.cn</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                Home
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                Archives
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                Tags
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/changzihao" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://weibo.com/u/1954058494?refer_flag=1001030201_&is_all=1" target="_blank" >
+                <i class="icon icon-lg icon-weibo"></i>
+                Weibo
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">分布式系统设计：简介</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 style="text-align:left" class="title">分布式系统设计：简介</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2018-03-16T14:41:00.000Z" itemprop="datePublished" class="page-time">
+  2018-03-16
+</time>
+
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#系统开发简史"><span class="post-toc-number">1.</span> <span class="post-toc-text">系统开发简史</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#软件开发模式简史"><span class="post-toc-number">2.</span> <span class="post-toc-text">软件开发模式简史</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#算法编程的形式化"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">算法编程的形式化</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#面向对象编程的模式"><span class="post-toc-number">2.2.</span> <span class="post-toc-text">面向对象编程的模式</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#开源软件的兴起"><span class="post-toc-number">2.3.</span> <span class="post-toc-text">开源软件的兴起</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#模式、实践和组件的价值"><span class="post-toc-number">3.</span> <span class="post-toc-text">模式、实践和组件的价值</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#站在巨人的肩膀上"><span class="post-toc-number">3.1.</span> <span class="post-toc-text">站在巨人的肩膀上</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#讨论项目的共同语言"><span class="post-toc-number">3.2.</span> <span class="post-toc-text">讨论项目的共同语言</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#共享组件轻松实现复用"><span class="post-toc-number">3.3.</span> <span class="post-toc-text">共享组件轻松实现复用</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#总结"><span class="post-toc-number">4.</span> <span class="post-toc-text">总结</span></a></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-分布式系统设计：简介"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">分布式系统设计：简介</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2018-03-16 22:41:00" datetime="2018-03-16T14:41:00.000Z"  itemprop="datePublished">2018-03-16</time>
+
+            
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <p>当今世界的持续在线的应用程序和API具有可用性和可靠性要求，在几十年前这些特性在全球范围内仅少量关键任务服务需要。同样，服务的快速，病毒式增长的潜力意味着每一个应用程序都必须按照用户的需求立即进行扩展。这些限制和要求意味着几乎所有的应用程序（无论是消费者移动应用程序还是后端支付应用程序）都需要构建成为分布式系统。</p>
+<p>但构建分布式系统具有挑战性。通常，他们是一次性定制解决方案。通过这种方式，在开发现代面向对象编程语言之前，分布式系统开发与软件开发领域具有惊人的相似之处。幸运的是，随着面向对象语言的发展，技术进步已经大大减少了构建分布式系统的挑战。在这种情况下，容器和容器协调器的普及程度越来越高。与面向对象编程中的对象概念一样，这些集容器化构建模块是开发可重用组件和模式的基础，可以大大简化和构建可靠的分布式系统的实践。在下面的介绍中，我们简会要介绍了导致今天发展现状的缘由。</p>
+<h2 id="系统开发简史"><a href="#系统开发简史" class="headerlink" title="系统开发简史"></a>系统开发简史</h2><p>一开始，有些机器是为特定目的而建造的，例如计算火炮表或潮汐，破码或其他精确，复杂但死记硬背的数学应用。最终，这些专用机器演变成通用可编程机器。最终他们从一次只能运行一个程序升级为通过分时操作系统在单台机器上运行多个程序，但这些机器仍然彼此分离。</p>
+<p>逐渐地，机器互联在一起，客户机 - 服务器体系结构诞生了，因此办公桌上的相对较低功率的机器可以用于利用另一个房间或建筑物中大型机的更大功率。虽然这种客户机-服务器编程比为单个机器编写程序要复杂一些，但理解它仍然相当简单。客户提出请求，服务器为这些请求提供服务。</p>
+<p>在二十一世纪初期，因特网和由数千台相对低成本的商用计算机互联组成的大型数据中心的发展引起了分布式系统的蓬勃发展。与客户端 - 服务器架构不同，分布式系统应用程序由运行在不同机器上的多个不同应用程序组或者运行在不同机器上的许多副本组成，所有这些应用程序一起通信以实现像web搜索或零售销售平台这样的系统。</p>
+<p>由于它们的分布式特性，如果结构合理，分布式系统本质上更加可靠。当架构正确时，他们可以为建立这些系统的软件工程师团队带来更多可扩展的组织模型。不幸的是，这些优势需要付出代价。这些分布式系统的设计，构建和调试一般会更加复杂。构建可靠的分布式系统所需的工程技能远远高于构建移动或Web前端等单机应用程序所需的技能。无论如何，对可靠分布式系统的需求只会继续增长。因此，对于构建它们的工具、模式和实践均有相应的需求。</p>
+<p>幸运的是，技术的进步也增加了构建分布式系统的便捷性。容器，容器镜像和容器协调器近年来都变得流行起来，因为它们是可靠分布式系统的基础和构建块。使用容器和容器协调器作为基础，我们可以建立一系列模式和可重用组件。这些模式和组件是我们可以用来更可靠高效地构建系统的工具包。</p>
+<h2 id="软件开发模式简史"><a href="#软件开发模式简史" class="headerlink" title="软件开发模式简史"></a>软件开发模式简史</h2><p>这已经不是软件行业第一次出现这种转变。为了更好地了解模式，实践和可重用组件如何重塑系统开发，有必要查看类似转换发生的历史时刻。</p>
+<h3 id="算法编程的形式化"><a href="#算法编程的形式化" class="headerlink" title="算法编程的形式化"></a>算法编程的形式化</h3><p>尽管人们在1962年出版Donald Knuth的系列作品，计算机编程艺术（Addison-Wesley Professional）之前，人们已经有十多年的计算机编程历史了，这本书标志着计算机科学发展的一个重要篇章。特别是，这些书包含的算法不是为任何特定的计算机设计的，而是为了向读者介绍算法本身。这些算法可以适应所用机器的特定架构或读者正在解决的具体问题。这种形式化是非常重要的，因为它为用户提供了一个用于构建他们程序的共享工具包，但也因为它表明了程序员应该学习并随后应用于各种不同环境的通用概念。算法本身（独立于任何要解决的具体问题），是值得理解的。</p>
+<h3 id="面向对象编程的模式"><a href="#面向对象编程的模式" class="headerlink" title="面向对象编程的模式"></a>面向对象编程的模式</h3><p>Knuth的书标志着计算机程序设计思想中的重要里程碑，算法代表了计算机程序设计发展的重要组成部分。然而，随着程序的复杂性增加，编写单个程序的人数从个位数增加到两位数，并最终增加到数千，显然程序化编程语言和算法不足以满足现代计算机任务的编程需求。计算机编程中的这些变化导致了面向对象的编程语言的发展，这在计算机程序的开发中提高了算法对数据可重用性和可扩展性。</p>
+<p>针对计算机编程的这些变化，编程的模式和实践也发生了变化。整个20世纪90年代初至中期，有关面向对象编程模式的书籍大量涌现。其中最着名的是Erich Gamma等人的“四人组”一书，设计模式：可重用的面向对象编程元素。设计模式为编程任务提供了一个共同的语言和框架。它描述了一系列基于接口的模式，可以在各种环境中重用。由于面向对象编程和特定接口的进步，这些模式也可以作为通用的可重用库来实现。这些库可以由开发者社区编写一次，并重复使用，节省时间并提高可靠性。</p>
+<h3 id="开源软件的兴起"><a href="#开源软件的兴起" class="headerlink" title="开源软件的兴起"></a>开源软件的兴起</h3><p>尽管开发者共享源代码的概念自计算之初就已经出现，而且自20世纪80年代中期以来正式的免费软件组织已经存在，但是在20世纪90年代末和21世纪后期，开源软件才开始兴起。虽然开源只与分布式系统模式的发展的联系并不十分密切。但是透过开源社区可以越来越清晰地感受到，软件开发特别是分布式系统开发尤其依赖社区努力。需要注意的是，构成本书所描述模式基础的所有容器技术都是作为开源软件开发和发布的。从社区角度来看，描述和改进分布式开发实践的模式的价值尤其明显。</p>
+<h2 id="模式、实践和组件的价值"><a href="#模式、实践和组件的价值" class="headerlink" title="模式、实践和组件的价值"></a>模式、实践和组件的价值</h2><p>在花费你宝贵的时间阅读一些我声称会改善你的开发实践的模式、教你新的技能、让我们面对它并改变你的生活之前，很多人会问：“为什么设计模式和实践可以改变我们设计和构建软件的方式？“。在这一节中，我将阐述我认为这是一个重要话题的原因，并希望说服你在本书的其余部分坚持读下去。</p>
+<h3 id="站在巨人的肩膀上"><a href="#站在巨人的肩膀上" class="headerlink" title="站在巨人的肩膀上"></a>站在巨人的肩膀上</h3><p>作为一个起点，分布式系统模式的价值在于提供一个站在巨人的肩膀上的机会。我们解决的问题或我们构建的系统很少是完全独一无二。但最终，我们放在一起的组合和软件所能实现的整体业务模式可能是世界以前从未见过的。但是，系统建立的方式以及它所追求的问题，想渴望可靠，敏捷和可扩展性并不是新事物。</p>
+<p>那么，这就是模式的第一个价值：它们允许我们从别人的错误中学习。也许你以前从未构建过分布式系统，或者你从未构建过这种类型的分布式系统。与其希望一位同事在这方面有一些经验或者通过其他人曾经犯过同样的错误来学习，你可以让模式作为你的指导。学习分布式系统开发的模式与学习计算机编程中的其他最佳实践相同。它可以加速您构建软件的能力，而不需要您直接了解系统，错误，直接的学习编写模式才是最重要的。</p>
+<h3 id="讨论项目的共同语言"><a href="#讨论项目的共同语言" class="headerlink" title="讨论项目的共同语言"></a>讨论项目的共同语言</h3><p>了解和加速我们对分布式系统的理解仅仅是拥有一组共享模式的第一个价值。即使是对于有经验的分布式系统开发人员来说模式也是有价值的。模式提供了一个共享词汇表，使我们能够快速地相互理解。这种理解是知识共享和进一步学习的基础。</p>
+<p>为了更好地理解这一点，假设我们都使用同一个对象来建造我们的房子。我把这个对象称为“foo”，当你把那个对象叫做“bar”时，我们会花多长时间来讨论foo与bar的值，或者试图解释它们的不同，直到我们发现我们在谈论同一个对象。只有等我们确定“foo”和“bar”是相同的，我们才能真正开始从彼此的经验中学习。</p>
+<p>如果没有共同的词汇，我们就会把时间浪费在“暴力的争论“中，或是解释别人通过另一个名称理解的同一个概念。因此，模式的另一个重要价值是提供一组通用的名称和定义，这样我们就不会浪费时间担心命名，而是直接讨论核心概念的细节和实现。</p>
+<p>我经常能看到这种情况。后面，sidecar容器的概念（在本书2章所描述的）在容器社区在内部使用。正因为如此，我们不必再花时间去定义它是什么意思，而是立即跳转到如何使用概念来解决特定问题。“如果我们只是使用sidecar”……“是的，而且我知道是我们可以使用的容器。”这个例子导致了模式的第三个价值：构建可重用组件。</p>
+<h3 id="共享组件轻松实现复用"><a href="#共享组件轻松实现复用" class="headerlink" title="共享组件轻松实现复用"></a>共享组件轻松实现复用</h3><p>除了使人们能够从别人身上学习并提供用于讨论构建系统艺术的共享词汇，模式为计算机编程提供了另一个重要工具：找到只需实现一次的通用组件的能力。</p>
+<p>如果我们必须完全使用自己的代码创建我们的程序，我们永远不会完成。事实上，我们几乎没有开始。今天，所有曾经出现过的系统都是站在数千人的肩上，依靠前人的努力而实现的。事实上，操作系统、打印机驱动程序、分布式数据库、容器运行时环境、容器协调器的代码以及我们今天构建的整个应用程序，都是使用可重用的共享库和组件构建的。</p>
+<p>模式是定义和开发这些可重用组件的基础。算法的形式化使得排序和其他规范算法的实现的可重用。基于接口的模式的定义促进了一个通用的、面向对象的库来实现这些模式。</p>
+<p>认清分布式系统的核心模式使我们能够构建共享的通用组件。使用基于HTTP的接口将这些模式实现为容器镜像意味着它们可以在许多不同的编程语言中重用。当然，构建可重用组件可以提高每个组件的质量，因为共享代码库可以充分使用这些组件来发现错误和弱点，并提供足够的关注以确保它们得到修复。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>分布式系统需要实现现代计算机程序所期望的可靠性，灵活性和可扩展性。分布式系统设计以后更多地是由巫师实施的黑魔法，而不是非专业人士所应用的科学。常见模式和实践的确定已经规范并改进了算法开发和面向对象编程的实践。本书的目标是为分布式系统做同样的事情。</p>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2018-03-16T14:42:34.000Z" itemprop="dateUpdated">2018-03-16 22:42:34</time>
+</span><br>
+
+
+        
+        本文作者：Changzihao <br />  本文链接：<a href="/2018/03/16/分布式系统设计：简介/" target="_blank" rel="external">http://changzihao.me/2018/03/16/分布式系统设计：简介/</a> <br /> 版权声明：本博客所有文章除特别声明外，均采用 CC BY-NC-SA 3.0 许可协议。转载请注明出处
+        
+    </div>
+    
+    <footer>
+        <a href="http://changzihao.me">
+            <img src="/img/avatar.jpg" alt="Chang Zihao">
+            Chang Zihao
+        </a>
+    </footer>
+</blockquote>
+
+        
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+
+
+        <div class="post-footer">
+            
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://changzihao.me/2018/03/16/分布式系统设计：简介/&title=《分布式系统设计：简介》 — Chang Zihao&pic=http://changzihao.me/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://changzihao.me/2018/03/16/分布式系统设计：简介/&title=《分布式系统设计：简介》 — Chang Zihao&source=" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://changzihao.me/2018/03/16/分布式系统设计：简介/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《分布式系统设计：简介》 — Chang Zihao&url=http://changzihao.me/2018/03/16/分布式系统设计：简介/&via=http://changzihao.me" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://changzihao.me/2018/03/16/分布式系统设计：简介/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between flex-row-reverse">
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2018/03/14/Imbalance-in-the-Cloud/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">Imbalance in the Cloud: an Analysis on Alibaba Cluster Trace</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+    <!-- Valine Comments -->
+    <div class="comments vcomment" id="comments"></div>
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+    <script src="//unpkg.com/valine@latest/dist/Valine.min.js"></script>
+    <!-- Valine Comments script -->
+    <script>
+        var GUEST_INFO = ['nick','mail','link'];
+        var guest_info = 'nick,mail'.split(',').filter(function(item){
+          return GUEST_INFO.indexOf(item) > -1
+        });
+        new Valine({
+            el: '#comments',
+            notify: 'false' == 'true',
+            verify: 'false' == 'true',
+            appId: "V3f0lbQWh1loif1riAYvWpp8-gzGzoHsz",
+            appKey: "bDPEGe6TJLHTero7DDITTsiM",
+            avatar: "mm",
+            placeholder: "Just go go",
+            guest_info: guest_info.length == 0 ? GUEST_INFO : guest_info,
+            pageSize: "10"
+        })
+    </script>
+    <!-- Valine Comments end -->
+
+
+
+
+</article>
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        谢谢大爷~
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/wechat.jpg" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check"
+                data-wechat="/img/wechat.jpg" data-alipay="/img/alipay.jpg">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>Chang Zihao &copy; 2017 - 2018</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://changzihao.me/2018/03/16/分布式系统设计：简介/&title=《分布式系统设计：简介》 — Chang Zihao&pic=http://changzihao.me/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://changzihao.me/2018/03/16/分布式系统设计：简介/&title=《分布式系统设计：简介》 — Chang Zihao&source=" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://changzihao.me/2018/03/16/分布式系统设计：简介/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《分布式系统设计：简介》 — Chang Zihao&url=http://changzihao.me/2018/03/16/分布式系统设计：简介/&via=http://changzihao.me" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://changzihao.me/2018/03/16/分布式系统设计：简介/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=http://changzihao.me/2018/03/16/分布式系统设计：简介/" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
+
+
+</script>
+
+<script src="/js/main.min.js?v=1.7.2"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="/js/search.min.js?v=1.7.2" async></script>
+
+
+
+
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = '页面崩溃了，快回来！';
+            clearTimeout(titleTime);
+        } else {
+            document.title = '咦!又好了!';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
+</script>
+
+
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</body>
+</html>
