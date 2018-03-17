@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    <meta name="google-site-verification" content="20upjTQOdgISFY-1CQwe5qpfxVSl9gwVHdzK_kCyipo">
+    
+    
+    
+    <title>分布式系统设计：PART I 单点模式 | Chang Zihao</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="分布式系统设计">
+    <meta name="description" content="本书只要介绍分布式系统，它是由运行在许多不同机器上的不同组件组成的应用程序。但是，本书的第一部分专门讨论在于单个节点上的模式。理由很简单，容器是本书所介绍的模式的基础构件，位于同一台机器上的多个容器组也是构成分布式系统模式的原子元素。 动机虽然你可能很清楚为什么将分布式应用程序分割为一组容器运行在不同的机器上，但是你可能想问为什么要将组件运行在在同一台机器的不同容器中。为了理解这些容器组的动机，思">
+<meta name="keywords" content="分布式系统设计">
+<meta property="og:type" content="article">
+<meta property="og:title" content="分布式系统设计：PART I 单点模式">
+<meta property="og:url" content="http://changzihao.me/2018/03/17/分布式系统设计：PART-I-单点模式/index.html">
+<meta property="og:site_name" content="Chang Zihao">
+<meta property="og:description" content="本书只要介绍分布式系统，它是由运行在许多不同机器上的不同组件组成的应用程序。但是，本书的第一部分专门讨论在于单个节点上的模式。理由很简单，容器是本书所介绍的模式的基础构件，位于同一台机器上的多个容器组也是构成分布式系统模式的原子元素。 动机虽然你可能很清楚为什么将分布式应用程序分割为一组容器运行在不同的机器上，但是你可能想问为什么要将组件运行在在同一台机器的不同容器中。为了理解这些容器组的动机，思">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-03-17T14:56:39.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="分布式系统设计：PART I 单点模式">
+<meta name="twitter:description" content="本书只要介绍分布式系统，它是由运行在许多不同机器上的不同组件组成的应用程序。但是，本书的第一部分专门讨论在于单个节点上的模式。理由很简单，容器是本书所介绍的模式的基础构件，位于同一台机器上的多个容器组也是构成分布式系统模式的原子元素。 动机虽然你可能很清楚为什么将分布式应用程序分割为一组容器运行在不同的机器上，但是你可能想问为什么要将组件运行在在同一台机器的不同容器中。为了理解这些容器组的动机，思">
+    
+        <link rel="alternate" type="application/atom+xml" title="Chang Zihao" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+	<link rel="stylesheet" href="/css/style.css?v=1.7.2">
+	<script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+	  <div style="text-align:center">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+			<img src="/img/avatar.jpg">
+        </a>
+	  </div>
+        <hgroup class="introduce">
+          <h5 style="text-align:center" class="nickname">Chang Zihao</h5>
+          <a href="mailto:changzihao17@mails.ucas.edu.cn" title="changzihao17@mails.ucas.edu.cn" class="mail">changzihao17@mails.ucas.edu.cn</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                Home
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                Archives
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                Tags
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/changzihao" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://weibo.com/u/1954058494?refer_flag=1001030201_&is_all=1" target="_blank" >
+                <i class="icon icon-lg icon-weibo"></i>
+                Weibo
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">分布式系统设计：PART I 单点模式</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 style="text-align:left" class="title">分布式系统设计：PART I 单点模式</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2018-03-17T14:56:00.000Z" itemprop="datePublished" class="page-time">
+  2018-03-17
+</time>
+
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#动机"><span class="post-toc-number">1.</span> <span class="post-toc-text">动机</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#总结"><span class="post-toc-number">2.</span> <span class="post-toc-text">总结</span></a></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-分布式系统设计：PART-I-单点模式"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">分布式系统设计：PART I 单点模式</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2018-03-17 22:56:00" datetime="2018-03-17T14:56:00.000Z"  itemprop="datePublished">2018-03-17</time>
+
+            
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <p>本书只要介绍分布式系统，它是由运行在许多不同机器上的不同组件组成的应用程序。但是，本书的第一部分专门讨论在于单个节点上的模式。理由很简单，容器是本书所介绍的模式的基础构件，位于同一台机器上的多个容器组也是构成分布式系统模式的原子元素。</p>
+<h2 id="动机"><a href="#动机" class="headerlink" title="动机"></a>动机</h2><p>虽然你可能很清楚为什么将分布式应用程序分割为一组容器运行在不同的机器上，但是你可能想问为什么要将组件运行在在同一台机器的不同容器中。为了理解这些容器组的动机，思考容器化背后的目标是很有必要的。通常，容器的目标是围绕特定资源建立边界（例如，此应用程序需要两个内核和8GB的内存）。同样，边界可以描绘团队所有权（例如，该团队拥有该镜像）。最后，边界还可以分散关注点（例如，这个镜像是做某件事的）。</p>
+<p>上述这些原因都表明了将单台机器上的应用程序拆分为一组容器的意义。首先考虑资源隔离，假设一个应用程序可能由两个组件组成：一个是面向用户的应用程序服务器，另一个是后台配置文件加载器。很显然，对于面向终端用户的程序，请求延迟是最高优先级，因此面向用户的应用程序需要足够的资源以确保其高速响应。另一方面，后台配置加载器主要是尽力而为服务；如果在用户请求量较高的时段内及时有些轻微的延迟，系统也会正常工作。同样，后台配置加载器不应该影响最终用户接收的服务质量。由于这些原因，管理员希望将面向用户的服务和后台的配置加载器分离到不同的容器中。这使管理员可以将不同的资源需求和优先级分别附加到两个不同的容器上，例如，确保后台加载器在服务程序空闲或者无负载时可从服务程序借用一定的资源。同样，如果存在由内存泄漏或其他内存资源过度使用导致的资源争用问题时，可确保在两个容器的达到单独资源需求之前终止后台加载程序。</p>
+<p>除了此资源隔离之外，还有其他将单节点应用程序拆分为多个容器的原因。考虑团队任务的规模，六到八人的团队规模是十分合理的。为了能够以这种方式构建团队，并且仍然需要构建完整的系统，我们需要为每个团队分配小型且重点突出的工作。此外，如果设计合理，通常一些可重复使用的模块，可供许多团队使用。例如，考虑让本地文件系统与git源代码库保持同步的任务。如果将此Git同步工具作为单独的容器来构建，那么可以在PHP，HTML，JavaScript，Python和众多其他Web服务环境中重复使用它。如果在每个容器中均单独部署，例如，将Python运行时和Git同步不可分割地绑定在一个容器中，那么这种情况下模块化复用是不可能的。</p>
+<p>最后，即使应用程序很小，并且所有容器都由一个团队拥有，但关注点分离可确保您的应用程序能就有较好的可理解性，并且可以易于测试，更新和部署。小型、重点突出的应用程序更易于理解，与其他系统的耦合更少。这意味着在部署git同步容易时无需重新部署应用服务器，让rollouts依赖和影响范围更小。这反过来又会使得rollout和rollback更加可靠，同时为部署应用程序带来更大的灵活性和灵活性。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>我希望上述这些例子会促使您考虑将应用程序（即使是单个节点上的应用程序）分解为多个容器。后续章节描述的一些模式，可以帮助时引导您构建模块化容器组。与多节点分布式模式相比，所有单点模式都假设模式中所有容器之间是紧密依赖关系。特别是，假设模式中的所有容器都可以可靠地在一台机器上共同调度。文章还假定模式中的所有容器都可以任意共享文件系统的卷以及诸如网络命名空间、共享内存等其他关键容器资源。这种紧密的分组在Kubernetes中被称为pod，但这个概念通常适用于不同的容器协调器。</p>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2018-03-17T14:56:39.000Z" itemprop="dateUpdated">2018-03-17 22:56:39</time>
+</span><br>
+
+
+        
+        本文作者：Changzihao <br />  本文链接：<a href="/2018/03/17/分布式系统设计：PART-I-单点模式/" target="_blank" rel="external">http://changzihao.me/2018/03/17/分布式系统设计：PART-I-单点模式/</a> <br /> 版权声明：本博客所有文章除特别声明外，均采用 CC BY-NC-SA 3.0 许可协议。转载请注明出处
+        
+    </div>
+    
+    <footer>
+        <a href="http://changzihao.me">
+            <img src="/img/avatar.jpg" alt="Chang Zihao">
+            Chang Zihao
+        </a>
+    </footer>
+</blockquote>
+
+        
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/分布式系统设计/">分布式系统设计</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://changzihao.me/2018/03/17/分布式系统设计：PART-I-单点模式/&title=《分布式系统设计：PART I 单点模式》 — Chang Zihao&pic=http://changzihao.me/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://changzihao.me/2018/03/17/分布式系统设计：PART-I-单点模式/&title=《分布式系统设计：PART I 单点模式》 — Chang Zihao&source=" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://changzihao.me/2018/03/17/分布式系统设计：PART-I-单点模式/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《分布式系统设计：PART I 单点模式》 — Chang Zihao&url=http://changzihao.me/2018/03/17/分布式系统设计：PART-I-单点模式/&via=http://changzihao.me" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://changzihao.me/2018/03/17/分布式系统设计：PART-I-单点模式/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between flex-row-reverse">
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2018/03/16/分布式系统设计：简介/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">分布式系统设计：简介</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+    <!-- Valine Comments -->
+    <div class="comments vcomment" id="comments"></div>
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+    <script src="//unpkg.com/valine@latest/dist/Valine.min.js"></script>
+    <!-- Valine Comments script -->
+    <script>
+        var GUEST_INFO = ['nick','mail','link'];
+        var guest_info = 'nick,mail'.split(',').filter(function(item){
+          return GUEST_INFO.indexOf(item) > -1
+        });
+        new Valine({
+            el: '#comments',
+            notify: 'false' == 'true',
+            verify: 'false' == 'true',
+            appId: "V3f0lbQWh1loif1riAYvWpp8-gzGzoHsz",
+            appKey: "bDPEGe6TJLHTero7DDITTsiM",
+            avatar: "mm",
+            placeholder: "Just go go",
+            guest_info: guest_info.length == 0 ? GUEST_INFO : guest_info,
+            pageSize: "10"
+        })
+    </script>
+    <!-- Valine Comments end -->
+
+
+
+
+</article>
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        谢谢大爷~
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/wechat.jpg" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check"
+                data-wechat="/img/wechat.jpg" data-alipay="/img/alipay.jpg">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>Chang Zihao &copy; 2017 - 2018</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://changzihao.me/2018/03/17/分布式系统设计：PART-I-单点模式/&title=《分布式系统设计：PART I 单点模式》 — Chang Zihao&pic=http://changzihao.me/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://changzihao.me/2018/03/17/分布式系统设计：PART-I-单点模式/&title=《分布式系统设计：PART I 单点模式》 — Chang Zihao&source=" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://changzihao.me/2018/03/17/分布式系统设计：PART-I-单点模式/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《分布式系统设计：PART I 单点模式》 — Chang Zihao&url=http://changzihao.me/2018/03/17/分布式系统设计：PART-I-单点模式/&via=http://changzihao.me" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://changzihao.me/2018/03/17/分布式系统设计：PART-I-单点模式/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=http://changzihao.me/2018/03/17/分布式系统设计：PART-I-单点模式/" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
+
+
+</script>
+
+<script src="/js/main.min.js?v=1.7.2"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="/js/search.min.js?v=1.7.2" async></script>
+
+
+
+
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = '页面崩溃了，快回来！';
+            clearTimeout(titleTime);
+        } else {
+            document.title = '咦!又好了!';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
+</script>
+
+
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</body>
+</html>
